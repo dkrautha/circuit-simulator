@@ -9,14 +9,14 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class CircuitSimulator extends ApplicationAdapter {
   ShapeRenderer shape;
-  // Ball ball;
+  //Ball ball;
   BitmapFont font;
   SpriteBatch batch;
 
   @Override
   public void create() {
-    // shape = new ShapeRenderer();
-    // ball = new Ball(150, 200, 70, 12, 5);
+    //shape = new ShapeRenderer();
+    //ball = new Ball(150, 200, 70, 12, 5);
     font = new BitmapFont();
     batch = new SpriteBatch();
   }
@@ -27,10 +27,10 @@ public class CircuitSimulator extends ApplicationAdapter {
     ScreenUtils.clear(Color.BLACK);
 
     // Update the balls position
-    // ball.update();
-    // shape.begin(ShapeRenderer.ShapeType.Filled);
-    // ball.draw(shape);
-    // shape.end();
+    //ball.update();
+    //shape.begin(ShapeRenderer.ShapeType.Filled);
+    //ball.draw(shape);
+    shape.end();
 
     // Begin drawing text on the screen
     batch.begin();
