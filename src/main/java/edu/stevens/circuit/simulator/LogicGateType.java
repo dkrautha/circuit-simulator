@@ -7,5 +7,6 @@ public enum LogicGateType {
     NAND,
     NOR,
     XOR,
-    XNOR
+    XNOR,
+    INPUT
 }
