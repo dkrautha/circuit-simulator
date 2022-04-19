@@ -9,8 +9,8 @@ public class Circuit implements CircuitActions {
     public void gateConnectB(LogicGate A, LogicGate B) {
         B.inputB = A.output;
     }
-    public LogicGate createGate(LogicGateType type, boolean inputA, boolean inputB) {
-        LogicGate gate = new LogicGate(type, inputA, inputB);
+    public LogicGate createGate(LogicGateType type) {
+        LogicGate gate = new LogicGate(type);
         return gate;
     }
 }
