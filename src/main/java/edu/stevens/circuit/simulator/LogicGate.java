@@ -1,6 +1,5 @@
 package edu.stevens.circuit.simulator;
 
-import java.util.Optional;
 import java.util.function.BinaryOperator;
 
 public class LogicGate {
@@ -24,7 +23,7 @@ public class LogicGate {
                 op = null;
                 break;
             case OR:
-                op = (a, b) -> !(a || b);
+                op = (a, b) -> (a || b);
                 break;
             case XNOR:
                 op = (a, b) -> ((a && b) || (!a && !b));
@@ -38,15 +37,19 @@ public class LogicGate {
 
     }
 
-    public boolean apply(Boolean inputA, Optional<Boolean> inputB) throws InvalidLogicGateInput {
+    public boolean applyNot(boolean inputA) throws InvalidLogicGateInput {
+        if (type != LogicGateType.NOT) {
+            throw new InvalidLogicGateInput("Provided a single argument to a non-NOT LogicGate.");
+        }
+
+        return !inputA;
+    }
+
+    public boolean apply(boolean inputA, boolean inputB) throws InvalidLogicGateInput {
         if (type == LogicGateType.NOT) {
-            return !inputA;
+            throw new InvalidLogicGateInput("Provided two arguments to a NOT LogicGate.");
         }
 
-        if (inputB.isEmpty()) {
-            throw new InvalidLogicGateInput("Failed to provide a second input for non-NOT LogicGate");
-        }
-
-        return op.apply(inputA, inputB.get());
+        return op.apply(inputA, inputB);
     }
 }
