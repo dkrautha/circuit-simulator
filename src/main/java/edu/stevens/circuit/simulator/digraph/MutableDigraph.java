@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 public class MutableDigraph<E, N> implements Digraph<E, N> {
 
-    private Function<N, Object> idNodeExtractor;
-    private Function<E, Object> idEdgeExtractor;
+    private final Function<N, Object> idNodeExtractor;
+    private final Function<E, Object> idEdgeExtractor;
     private final Map<Object, GraphNode<E, N>> nodesById;
     private final Map<Object, GraphEdge<E, N>> edgesById;
 

@@ -1,4 +1,4 @@
-package edu.stevens.circuit.simulator;
+package edu.stevens.circuit.simulator.logic.gate;
 
 public class InvalidGateType extends RuntimeException {
     public InvalidGateType() {
