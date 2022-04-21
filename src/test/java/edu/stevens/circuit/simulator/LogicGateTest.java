@@ -33,24 +33,79 @@ public class LogicGateTest {
 
     @Test
     public void test_AND() {
-        Circuit c = new LogicGate(LogicGateType.NOT);
+        Circuit c = new LogicGate(LogicGateType.AND);
 
-        assertArrayEquals(f, c.outputs(t));
-        assertArrayEquals(t, c.outputs(f));
+        assertArrayEquals(f, c.outputs(ff));
+        assertArrayEquals(f, c.outputs(ft));
+        assertArrayEquals(f, c.outputs(tf));
+        assertArrayEquals(t, c.outputs(tt));
+
+        Exception e = assertThrows(InvalidLogicGateInput.class, () -> c.outputs(f));
+        assertEquals(e.getMessage(), "This logic gate requires two inputs.");
     }
 
     @Test()
-    public void test_OR() {}
+    public void test_OR() {
+        Circuit c = new LogicGate(LogicGateType.OR);
+
+        assertArrayEquals(f, c.outputs(ff));
+        assertArrayEquals(t, c.outputs(ft));
+        assertArrayEquals(t, c.outputs(tf));
+        assertArrayEquals(t, c.outputs(tt));
+
+        Exception e = assertThrows(InvalidLogicGateInput.class, () -> c.outputs(f));
+        assertEquals(e.getMessage(), "This logic gate requires two inputs.");
+    }
 
     @Test
-    public void test_NAND() {}
+    public void test_NAND() {
+        Circuit c = new LogicGate(LogicGateType.NAND);
+
+        assertArrayEquals(t, c.outputs(ff));
+        assertArrayEquals(t, c.outputs(ft));
+        assertArrayEquals(t, c.outputs(tf));
+        assertArrayEquals(f, c.outputs(tt));
+
+        Exception e = assertThrows(InvalidLogicGateInput.class, () -> c.outputs(f));
+        assertEquals(e.getMessage(), "This logic gate requires two inputs.");
+    }
 
     @Test
-    public void test_NOR() {}
+    public void test_NOR() {
+        Circuit c = new LogicGate(LogicGateType.NOR);
+
+        assertArrayEquals(t, c.outputs(ff));
+        assertArrayEquals(f, c.outputs(ft));
+        assertArrayEquals(f, c.outputs(tf));
+        assertArrayEquals(f, c.outputs(tt));
+
+        Exception e = assertThrows(InvalidLogicGateInput.class, () -> c.outputs(f));
+        assertEquals(e.getMessage(), "This logic gate requires two inputs.");
+    }
 
     @Test
-    public void test_XOR() {}
+    public void test_XOR() {
+        Circuit c = new LogicGate(LogicGateType.XOR);
+
+        assertArrayEquals(f, c.outputs(ff));
+        assertArrayEquals(t, c.outputs(ft));
+        assertArrayEquals(t, c.outputs(tf));
+        assertArrayEquals(f, c.outputs(tt));
+
+        Exception e = assertThrows(InvalidLogicGateInput.class, () -> c.outputs(f));
+        assertEquals(e.getMessage(), "This logic gate requires two inputs.");
+    }
 
     @Test
-    public void test_XNOR() {}
+    public void test_XNOR() {
+        Circuit c = new LogicGate(LogicGateType.XNOR);
+
+        assertArrayEquals(t, c.outputs(ff));
+        assertArrayEquals(f, c.outputs(ft));
+        assertArrayEquals(f, c.outputs(tf));
+        assertArrayEquals(t, c.outputs(tt));
+
+        Exception e = assertThrows(InvalidLogicGateInput.class, () -> c.outputs(f));
+        assertEquals(e.getMessage(), "This logic gate requires two inputs.");
+    }
 }
