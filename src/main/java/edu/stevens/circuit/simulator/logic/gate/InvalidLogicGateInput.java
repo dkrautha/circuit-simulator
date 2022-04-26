@@ -1,8 +1,9 @@
 package edu.stevens.circuit.simulator.logic.gate;
 
-public class InvalidLogicGateInput extends RuntimeException {
+import edu.stevens.circuit.simulator.circuit.InvalidCircuitInput;
+
+public class InvalidLogicGateInput extends InvalidCircuitInput {
     public InvalidLogicGateInput(String message) {
         super(message);
     }
-
 }
