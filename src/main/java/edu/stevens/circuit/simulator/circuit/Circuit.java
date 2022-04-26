@@ -1,10 +1,15 @@
 package edu.stevens.circuit.simulator.circuit;
 
+import java.util.List;
+
 /**
  * Interface for a circuit.
  * 
- * Circuits will be the underlying data type for GraphNodes
  */
 public interface Circuit {
-    public boolean[] outputs(boolean[] inputs);
+    public void setInputs(List<Boolean> inputs) throws InvalidCircuitInput;
+
+    public List<Boolean> calculateOutputs();
+
+    public List<Boolean> getOutputs();
 }
