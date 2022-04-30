@@ -217,8 +217,6 @@ public class GateTests {
     assertEquals(g1, g2);
   }
 
-  // TODO tests below are for future classes to be added
-
   // GateAnd tests.
   @Test
   public void gateand1() {
