@@ -229,14 +229,14 @@ public class GateTests {
     expected.get(0).setSignal(Signal.LO);
     expected.get(1).setSignal(Signal.HI);
 
-    g.feed("01");
+    g.feedFromString("01");
     assertEquals(expected, g.getInputs());
   }
 
   @Test
   public void gateand_00() {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
-    g.feed("00");
+    g.feedFromString("00");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -244,7 +244,7 @@ public class GateTests {
   @Test
   public void gateand_01() {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
-    g.feed("01");
+    g.feedFromString("01");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -252,7 +252,7 @@ public class GateTests {
   @Test
   public void gateand_10() {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
-    g.feed("10");
+    g.feedFromString("10");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -260,7 +260,7 @@ public class GateTests {
   @Test
   public void gateand_11() {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
-    g.feed("11");
+    g.feedFromString("11");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -268,7 +268,7 @@ public class GateTests {
   @Test
   public void gateand_X0() {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
-    g.feed("X0");
+    g.feedFromString("X0");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -276,7 +276,7 @@ public class GateTests {
   @Test
   public void gateand_1X() {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
-    g.feed("1X");
+    g.feedFromString("1X");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -284,7 +284,7 @@ public class GateTests {
   @Test
   public void gateand_XX() {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
-    g.feed("XX");
+    g.feedFromString("XX");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -292,7 +292,7 @@ public class GateTests {
   @Test
   public void gateand_111() {
     GateAnd g = new GateAnd(wires3, new Wire("outa"));
-    g.feed("111");
+    g.feedFromString("111");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -300,7 +300,7 @@ public class GateTests {
   @Test
   public void gateand_1101() {
     GateAnd g = new GateAnd(wires4, new Wire("outa"));
-    g.feed("1101");
+    g.feedFromString("1101");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -309,14 +309,14 @@ public class GateTests {
   public void gateand_propagate_results() {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     // output : X -> LO
-    g.feed("00");
+    g.feedFromString("00");
     boolean ans = g.propagate();
     assertTrue(ans);
     // output: LO -> LO
     ans = g.propagate();
     assertFalse(ans);
     // output: LO -> HI
-    g.feed("11");
+    g.feedFromString("11");
     ans = g.propagate();
     assertTrue(ans);
   }
@@ -332,14 +332,14 @@ public class GateTests {
     expected.get(0).setSignal(Signal.LO);
     expected.get(1).setSignal(Signal.HI);
 
-    g.feed("01");
+    g.feedFromString("01");
     assertEquals(expected, g.getInputs());
   }
 
   @Test
   public void gateor_00() {
     GateOr g = new GateOr(wires2, new Wire("outa"));
-    g.feed("00");
+    g.feedFromString("00");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -347,7 +347,7 @@ public class GateTests {
   @Test
   public void gateor_01() {
     GateOr g = new GateOr(wires2, new Wire("outa"));
-    g.feed("01");
+    g.feedFromString("01");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -355,7 +355,7 @@ public class GateTests {
   @Test
   public void gateor_10() {
     GateOr g = new GateOr(wires2, new Wire("outa"));
-    g.feed("10");
+    g.feedFromString("10");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -363,7 +363,7 @@ public class GateTests {
   @Test
   public void gateor_11() {
     GateOr g = new GateOr(wires2, new Wire("outa"));
-    g.feed("11");
+    g.feedFromString("11");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -371,7 +371,7 @@ public class GateTests {
   @Test
   public void gateor_X0() {
     GateOr g = new GateOr(wires2, new Wire("outa"));
-    g.feed("X0");
+    g.feedFromString("X0");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -379,7 +379,7 @@ public class GateTests {
   @Test
   public void gateor_1X() {
     GateOr g = new GateOr(wires2, new Wire("outa"));
-    g.feed("1X");
+    g.feedFromString("1X");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -387,7 +387,7 @@ public class GateTests {
   @Test
   public void gateor_XX() {
     GateOr g = new GateOr(wires2, new Wire("outa"));
-    g.feed("XX");
+    g.feedFromString("XX");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -395,7 +395,7 @@ public class GateTests {
   @Test
   public void gateor_111() {
     GateOr g = new GateOr(wires3, new Wire("outa"));
-    g.feed("111");
+    g.feedFromString("111");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -403,7 +403,7 @@ public class GateTests {
   @Test
   public void gateor_0010() {
     GateOr g = new GateOr(wires4, new Wire("outa"));
-    g.feed("0010");
+    g.feedFromString("0010");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -412,14 +412,14 @@ public class GateTests {
   public void gateor_propagate_results() {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     // output : X -> LO
-    g.feed("00");
+    g.feedFromString("00");
     boolean ans = g.propagate();
     assertTrue(ans);
     // output: LO -> LO
     ans = g.propagate();
     assertFalse(ans);
     // output: LO -> HI
-    g.feed("11");
+    g.feedFromString("11");
     ans = g.propagate();
     assertTrue(ans);
   }
@@ -433,14 +433,14 @@ public class GateTests {
 
     expected.get(0).setSignal(Signal.LO);
 
-    g.feed("0");
+    g.feedFromString("0");
     assertEquals(expected, g.getInputs());
   }
 
   @Test
   public void gatenot_0() {
     GateNot g = new GateNot(new Wire("inw"), new Wire("outa"));
-    g.feed("0");
+    g.feedFromString("0");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -448,7 +448,7 @@ public class GateTests {
   @Test
   public void gatenot_1() {
     GateNot g = new GateNot(new Wire("inw"), new Wire("outa"));
-    g.feed("1");
+    g.feedFromString("1");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -456,7 +456,7 @@ public class GateTests {
   @Test
   public void gatenot_X() {
     GateNot g = new GateNot(new Wire("inw"), new Wire("outa"));
-    g.feed("X");
+    g.feedFromString("X");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -465,14 +465,14 @@ public class GateTests {
   public void gatenot_propagate_results() {
     GateNot g = new GateNot(new Wire("inw"), new Wire("outa"));
     // output : X -> LO
-    g.feed("1");
+    g.feedFromString("1");
     boolean ans = g.propagate();
     assertTrue(ans);
     // output: LO -> LO
     ans = g.propagate();
     assertFalse(ans);
     // output: LO -> HI
-    g.feed("0");
+    g.feedFromString("0");
     ans = g.propagate();
     assertTrue(ans);
   }
@@ -487,14 +487,14 @@ public class GateTests {
     expected.get(0).setSignal(Signal.LO);
     expected.get(1).setSignal(Signal.HI);
 
-    g.feed("01");
+    g.feedFromString("01");
     assertEquals(expected, g.getInputs());
   }
 
   @Test
   public void gatexor_00() {
     GateXor g = new GateXor(wires2, new Wire("outa"));
-    g.feed("00");
+    g.feedFromString("00");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -502,7 +502,7 @@ public class GateTests {
   @Test
   public void gatexor_01() {
     GateXor g = new GateXor(wires2, new Wire("outa"));
-    g.feed("01");
+    g.feedFromString("01");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -510,7 +510,7 @@ public class GateTests {
   @Test
   public void gatexor_10() {
     GateXor g = new GateXor(wires2, new Wire("outa"));
-    g.feed("10");
+    g.feedFromString("10");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -518,7 +518,7 @@ public class GateTests {
   @Test
   public void gatexor_11() {
     GateXor g = new GateXor(wires2, new Wire("outa"));
-    g.feed("11");
+    g.feedFromString("11");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -526,7 +526,7 @@ public class GateTests {
   @Test
   public void gatexor_X0() {
     GateXor g = new GateXor(wires2, new Wire("outa"));
-    g.feed("X0");
+    g.feedFromString("X0");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -534,7 +534,7 @@ public class GateTests {
   @Test
   public void gatexor_1X() {
     GateXor g = new GateXor(wires2, new Wire("outa"));
-    g.feed("1X");
+    g.feedFromString("1X");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -542,7 +542,7 @@ public class GateTests {
   @Test
   public void gatexor_XX() {
     GateXor g = new GateXor(wires2, new Wire("outa"));
-    g.feed("XX");
+    g.feedFromString("XX");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -550,7 +550,7 @@ public class GateTests {
   @Test
   public void gatexor_011() {
     GateXor g = new GateXor(wires3, new Wire("outa"));
-    g.feed("011");
+    g.feedFromString("011");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -558,7 +558,7 @@ public class GateTests {
   @Test
   public void gatexor_0010() {
     GateXor g = new GateXor(wires4, new Wire("outa"));
-    g.feed("0010");
+    g.feedFromString("0010");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -567,14 +567,14 @@ public class GateTests {
   public void gatexor_propagate_results() {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     // output : X -> LO
-    g.feed("00");
+    g.feedFromString("00");
     boolean ans = g.propagate();
     assertTrue(ans);
     // output: LO -> LO
     ans = g.propagate();
     assertFalse(ans);
     // output: LO -> HI
-    g.feed("10");
+    g.feedFromString("10");
     ans = g.propagate();
     assertTrue(ans);
   }
@@ -589,14 +589,14 @@ public class GateTests {
     expected.get(0).setSignal(Signal.LO);
     expected.get(1).setSignal(Signal.HI);
 
-    g.feed("01");
+    g.feedFromString("01");
     assertEquals(expected, g.getInputs());
   }
 
   @Test
   public void gatenand_00() {
     GateNand g = new GateNand(wires2, new Wire("outa"));
-    g.feed("00");
+    g.feedFromString("00");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -604,7 +604,7 @@ public class GateTests {
   @Test
   public void gatenand_01() {
     GateNand g = new GateNand(wires2, new Wire("outa"));
-    g.feed("01");
+    g.feedFromString("01");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -612,7 +612,7 @@ public class GateTests {
   @Test
   public void gatenand_10() {
     GateNand g = new GateNand(wires2, new Wire("outa"));
-    g.feed("10");
+    g.feedFromString("10");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -620,7 +620,7 @@ public class GateTests {
   @Test
   public void gatenand_11() {
     GateNand g = new GateNand(wires2, new Wire("outa"));
-    g.feed("11");
+    g.feedFromString("11");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -628,7 +628,7 @@ public class GateTests {
   @Test
   public void gatenand_X0() {
     GateNand g = new GateNand(wires2, new Wire("outa"));
-    g.feed("X0");
+    g.feedFromString("X0");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -636,7 +636,7 @@ public class GateTests {
   @Test
   public void gatenand_1X() {
     GateNand g = new GateNand(wires2, new Wire("outa"));
-    g.feed("1X");
+    g.feedFromString("1X");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -644,7 +644,7 @@ public class GateTests {
   @Test
   public void gatenand_XX() {
     GateNand g = new GateNand(wires2, new Wire("outa"));
-    g.feed("XX");
+    g.feedFromString("XX");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -652,7 +652,7 @@ public class GateTests {
   @Test
   public void gatenand_011() {
     GateNand g = new GateNand(wires3, new Wire("outa"));
-    g.feed("011");
+    g.feedFromString("011");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -660,7 +660,7 @@ public class GateTests {
   @Test
   public void gatenand_0010() {
     GateNand g = new GateNand(wires4, new Wire("outa"));
-    g.feed("0010");
+    g.feedFromString("0010");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -669,14 +669,14 @@ public class GateTests {
   public void gatenand_propagate_results() {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     // output : X -> LO
-    g.feed("11");
+    g.feedFromString("11");
     boolean ans = g.propagate();
     assertTrue(ans);
     // output: LO -> LO
     ans = g.propagate();
     assertFalse(ans);
     // output: LO -> HI
-    g.feed("10");
+    g.feedFromString("10");
     ans = g.propagate();
     assertTrue(ans);
   }
@@ -691,14 +691,14 @@ public class GateTests {
     expected.get(0).setSignal(Signal.LO);
     expected.get(1).setSignal(Signal.HI);
 
-    g.feed("01");
+    g.feedFromString("01");
     assertEquals(expected, g.getInputs());
   }
 
   @Test
   public void gatenor_00() {
     GateNor g = new GateNor(wires2, new Wire("outa"));
-    g.feed("00");
+    g.feedFromString("00");
     boolean ans = g.propagate();
     assertEquals(sigs1, g.read());
   }
@@ -706,7 +706,7 @@ public class GateTests {
   @Test
   public void gatenor_01() {
     GateNor g = new GateNor(wires2, new Wire("outa"));
-    g.feed("01");
+    g.feedFromString("01");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -714,7 +714,7 @@ public class GateTests {
   @Test
   public void gatenor_10() {
     GateNor g = new GateNor(wires2, new Wire("outa"));
-    g.feed("10");
+    g.feedFromString("10");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -722,7 +722,7 @@ public class GateTests {
   @Test
   public void gatenor_11() {
     GateNor g = new GateNor(wires2, new Wire("outa"));
-    g.feed("11");
+    g.feedFromString("11");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -730,7 +730,7 @@ public class GateTests {
   @Test
   public void gatenor_X0() {
     GateNor g = new GateNor(wires2, new Wire("outa"));
-    g.feed("X0");
+    g.feedFromString("X0");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -738,7 +738,7 @@ public class GateTests {
   @Test
   public void gatenor_1X() {
     GateNor g = new GateNor(wires2, new Wire("outa"));
-    g.feed("1X");
+    g.feedFromString("1X");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -746,7 +746,7 @@ public class GateTests {
   @Test
   public void gatenor_XX() {
     GateNor g = new GateNor(wires2, new Wire("outa"));
-    g.feed("XX");
+    g.feedFromString("XX");
     boolean ans = g.propagate();
     assertEquals(sigsX, g.read());
   }
@@ -754,7 +754,7 @@ public class GateTests {
   @Test
   public void gatenor_011() {
     GateNor g = new GateNor(wires3, new Wire("outa"));
-    g.feed("011");
+    g.feedFromString("011");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -762,7 +762,7 @@ public class GateTests {
   @Test
   public void gatenor_0010() {
     GateNor g = new GateNor(wires4, new Wire("outa"));
-    g.feed("0010");
+    g.feedFromString("0010");
     boolean ans = g.propagate();
     assertEquals(sigs0, g.read());
   }
@@ -771,14 +771,14 @@ public class GateTests {
   public void gatenor_propagate_results() {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     // output : X -> HI
-    g.feed("00");
+    g.feedFromString("00");
     boolean ans = g.propagate();
     assertTrue(ans);
     // output: HI -> HI
     ans = g.propagate();
     assertFalse(ans);
     // output: HI -> LO
-    g.feed("10");
+    g.feedFromString("10");
     ans = g.propagate();
     assertTrue(ans);
   }
