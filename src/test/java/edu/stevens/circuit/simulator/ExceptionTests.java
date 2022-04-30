@@ -30,4 +30,33 @@ public class ExceptionTests {
     } catch (LogicMalformedSignal ex) {
     }
   }
+
+  // ExceptionLogicParameters tests.
+  @Test()
+  public void ELParams1() {
+    InvalidLogicParameters e = new InvalidLogicParameters(true, 2, 4);
+    assertEquals(true, e.isInputsRelated());
+    assertEquals(2, e.getExpected());
+    assertEquals(4, e.getFound());
+  }
+
+  @Test()
+  public void ELParams2() {
+    InvalidLogicParameters e = new InvalidLogicParameters(true, 2, 4);
+    e.setInputsRelated(false);
+    e.setExpected(5);
+    e.setFound(3);
+    assertEquals(false, e.isInputsRelated());
+    assertEquals(5, e.getExpected());
+    assertEquals(3, e.getFound());
+  }
+
+  @Test()
+  public void ELParams3() {
+    InvalidLogicParameters e = new InvalidLogicParameters(true, 2, 4);
+    try {
+      throw e;
+    } catch (InvalidLogicParameters ex) {
+    }
+  }
 }
