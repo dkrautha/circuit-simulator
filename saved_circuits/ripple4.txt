@@ -1,0 +1,8 @@
+IMPORT halfadder fulladder
+
+A0 A1 A2 A3 B0 B1 B2 B3 Cin -> S0 S1 S2 S3 Cout
+
+fulladder A0 B0 Cin -> C0 S0
+fulladder A1 B1 C0  -> C1 S1
+fulladder A2 B2 C1  -> C2 S2
+fulladder A3 B3 C2  -> Cout S3

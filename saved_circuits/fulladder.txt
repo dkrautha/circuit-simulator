@@ -1,0 +1,7 @@
+IMPORT halfadder
+
+X Y Cin -> Cout Sum
+
+halfadder X Y -> C1 S1
+halfadder Cin S1 -> C2 Sum
+OR C2 C1 -> Cout

@@ -1,0 +1,3 @@
+A B -> out
+
+NAND A B -> out

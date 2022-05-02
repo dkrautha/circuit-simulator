@@ -1,0 +1,4 @@
+A B C -> out
+
+OR  A B -> out1
+AND out1 C -> out

@@ -1,0 +1,7 @@
+IMPORT notnot
+
+temp orary -> out
+
+notnot temp -> temp1
+notnot orary -> temp2
+AND temp1 temp2 -> out

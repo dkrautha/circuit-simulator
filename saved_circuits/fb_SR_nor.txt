@@ -1,0 +1,4 @@
+S R -> Q nQ
+
+NOR R nQ -> Q
+NOR Q S -> nQ

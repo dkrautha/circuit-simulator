@@ -1,0 +1,4 @@
+A B -> carry sum
+
+AND A B -> carry
+XOR A B -> sum

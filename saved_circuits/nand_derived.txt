@@ -1,0 +1,6 @@
+IMPORT and
+
+one two -> result
+
+and one two -> andOut
+NOT andOut -> result

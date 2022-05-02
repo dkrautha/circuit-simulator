@@ -1,0 +1,4 @@
+in -> out
+
+NOT in -> temp
+NOT temp -> out

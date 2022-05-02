@@ -1,0 +1,4 @@
+nS nR -> Q nQ
+
+NAND nS nQ -> Q
+NAND Q nR -> nQ

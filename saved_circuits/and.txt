@@ -1,0 +1,3 @@
+A B -> out
+
+AND A B -> out

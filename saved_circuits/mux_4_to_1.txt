@@ -1,0 +1,9 @@
+D0 D1 D2 D3 S0 S1 -> Q
+
+NOT S0 -> w0
+NOT S1 -> w1
+AND D0 w0 w1 -> wa0
+AND D1 S0 w1 -> wa1
+AND D2 w0 S1 -> wa2
+AND D3 S0 S1 -> wa3
+OR wa0 wa1 wa2 wa3 -> Q

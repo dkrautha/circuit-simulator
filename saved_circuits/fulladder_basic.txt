@@ -1,0 +1,7 @@
+A B Cin -> Cout Sum
+
+XOR A B -> out1
+AND A B -> out2
+XOR out1 Cin -> Sum
+AND out1 Cin -> out4
+OR  out4 out2 -> Cout

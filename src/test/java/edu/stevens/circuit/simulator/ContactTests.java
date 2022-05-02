@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.Test;
 
 public class ContactTests {
-  // Contact tests.
-
   @Test
   public void contact_1() {
     Contact c = new Contact(new Wire("in"), new Wire("out"), true);
