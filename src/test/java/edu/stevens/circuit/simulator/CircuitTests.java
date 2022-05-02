@@ -4,14 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -87,10 +85,6 @@ public class CircuitTests {
         new ArrayList<Contact>(), new ArrayList<Wire>(), new ArrayList<String>());
   }
 
-  // building a circuit by hand, without reading files or using other
-  // constructors, is a real pain.
-  // but it's a static method, which means student files will be a bit more
-  // forgiven during testing.
   // this is equivalent to the samples/andy.txt circuit.
   public static Circuit getAndy() {
     // andy circuit's wires
@@ -390,7 +384,7 @@ public class CircuitTests {
   @Test
   public void circuit_propagate1() {
     simpleCircuit.feedFromString("101");
-    boolean ans = simpleCircuit.propagate();
+    simpleCircuit.propagate();
     assertEquals(Signal.HI, simpleCircuit.getOutputs().get(0).getOut().getSignal());
   }
 
@@ -406,21 +400,21 @@ public class CircuitTests {
   @Test
   public void circuit_propagate3() {
     simpleCircuit.feedFromString("110");
-    boolean ans = simpleCircuit.propagate();
+    simpleCircuit.propagate();
     assertEquals(Signal.LO, simpleCircuit.getOutputs().get(0).getOut().getSignal());
   }
 
   @Test
   public void circuit_propagate4() {
     simpleCircuit.feedFromString("X00");
-    boolean ans = simpleCircuit.propagate();
+    simpleCircuit.propagate();
     assertEquals(Signal.LO, simpleCircuit.getOutputs().get(0).getOut().getSignal());
   }
 
   @Test
   public void circuit_propagate5() {
     simpleCircuit.feedFromString("10X");
-    boolean ans = simpleCircuit.propagate();
+    simpleCircuit.propagate();
     assertEquals(Signal.X, simpleCircuit.getOutputs().get(0).getOut().getSignal());
   }
 
@@ -468,28 +462,28 @@ public class CircuitTests {
   @Test
   public void circuit_read1() {
     simpleCircuit.feedFromString("101");
-    boolean ans = simpleCircuit.propagate();
+    simpleCircuit.propagate();
     assertEquals(sigs1, simpleCircuit.read());
   }
 
   @Test
   public void circuit_read2() {
     simpleCircuit.feedFromString("110");
-    boolean ans = simpleCircuit.propagate();
+    simpleCircuit.propagate();
     assertEquals(sigs0, simpleCircuit.read());
   }
 
   @Test
   public void circuit_read3() {
     simpleCircuit.feedFromString("X00");
-    boolean ans = simpleCircuit.propagate();
+    simpleCircuit.propagate();
     assertEquals(sigs0, simpleCircuit.read());
   }
 
   @Test
   public void circuit_read4() {
     simpleCircuit.feedFromString("10X");
-    boolean ans = simpleCircuit.propagate();
+    simpleCircuit.propagate();
     assertEquals(sigsX, simpleCircuit.read());
   }
 

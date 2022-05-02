@@ -10,26 +10,25 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class SignalTests {
-  static List<Signal> sigs00, sigs01, sigs10, sigs11, sigs0X, sigsX0, sigs1X, sigsX1, sigsXX, sigs0, sigs1, sigsX;
+  static List<Signal> sigs00, sigs01, sigs10, sigs11, sigs0X, sigsX0, sigs1X, sigsX1, sigsXX, sigs0,
+      sigs1, sigsX;
 
   @BeforeAll
   public static void setupSignals() {
-    sigs00 = Arrays.asList(new Signal[] { Signal.LO, Signal.LO });
-    sigs01 = Arrays.asList(new Signal[] { Signal.LO, Signal.HI });
-    sigs10 = Arrays.asList(new Signal[] { Signal.HI, Signal.LO });
-    sigs11 = Arrays.asList(new Signal[] { Signal.HI, Signal.HI });
-    sigs0X = Arrays.asList(new Signal[] { Signal.LO, Signal.X });
-    sigsX0 = Arrays.asList(new Signal[] { Signal.X, Signal.LO });
-    sigs1X = Arrays.asList(new Signal[] { Signal.HI, Signal.X });
-    sigsX1 = Arrays.asList(new Signal[] { Signal.X, Signal.HI });
-    sigsXX = Arrays.asList(new Signal[] { Signal.X, Signal.X });
+    sigs00 = Arrays.asList(new Signal[] {Signal.LO, Signal.LO});
+    sigs01 = Arrays.asList(new Signal[] {Signal.LO, Signal.HI});
+    sigs10 = Arrays.asList(new Signal[] {Signal.HI, Signal.LO});
+    sigs11 = Arrays.asList(new Signal[] {Signal.HI, Signal.HI});
+    sigs0X = Arrays.asList(new Signal[] {Signal.LO, Signal.X});
+    sigsX0 = Arrays.asList(new Signal[] {Signal.X, Signal.LO});
+    sigs1X = Arrays.asList(new Signal[] {Signal.HI, Signal.X});
+    sigsX1 = Arrays.asList(new Signal[] {Signal.X, Signal.HI});
+    sigsXX = Arrays.asList(new Signal[] {Signal.X, Signal.X});
 
-    sigs0 = Arrays.asList(new Signal[] { Signal.LO });
-    sigs1 = Arrays.asList(new Signal[] { Signal.HI });
-    sigsX = Arrays.asList(new Signal[] { Signal.X });
+    sigs0 = Arrays.asList(new Signal[] {Signal.LO});
+    sigs1 = Arrays.asList(new Signal[] {Signal.HI});
+    sigsX = Arrays.asList(new Signal[] {Signal.X});
   }
-
-  // Signal tests
 
   @Test
   public void signal1() {
@@ -79,7 +78,7 @@ public class SignalTests {
       char c = ' ';
       Signal s = Signal.fromChar(c);
       fail(String.format("shouldn't have gotten back Signal %s from char'%s'.", s, c));
-    } catch (LogicMalformedSignal e) {
+    } catch (MalformedSignal e) {
       return;
     }
   }
@@ -90,7 +89,7 @@ public class SignalTests {
       char c = 'h';
       Signal s = Signal.fromChar(c);
       fail(String.format("shouldn't have gotten back Signal %s from char'%s'.", s, c));
-    } catch (LogicMalformedSignal e) {
+    } catch (MalformedSignal e) {
       return;
     }
   }
@@ -99,7 +98,8 @@ public class SignalTests {
   public void signal11() {
     String inp = "110X";
     List<Signal> actuals = Signal.fromString(inp);
-    List<Signal> expecteds = Arrays.asList(new Signal[] { Signal.HI, Signal.HI, Signal.LO, Signal.X });
+    List<Signal> expecteds =
+        Arrays.asList(new Signal[] {Signal.HI, Signal.HI, Signal.LO, Signal.X});
     assertEquals(expecteds, actuals);
   }
 
@@ -111,11 +111,11 @@ public class SignalTests {
     assertEquals(expecteds, actuals);
   }
 
-  // this one is still okay - valid symbols and ignorable whitespace.
   @Test
   public void signal13() {
     String inp = "1 x \tX 00";
-    List<Signal> expecteds = Arrays.asList(new Signal[] { Signal.HI, Signal.X, Signal.X, Signal.LO, Signal.LO });
+    List<Signal> expecteds =
+        Arrays.asList(new Signal[] {Signal.HI, Signal.X, Signal.X, Signal.LO, Signal.LO});
     List<Signal> actuals = Signal.fromString(inp);
     assertEquals(expecteds, actuals);
   }
@@ -127,7 +127,7 @@ public class SignalTests {
       @SuppressWarnings("unused")
       List<Signal> expecteds = Signal.fromString(inp);
       fail("shouldn't have succeeded in reading past any bad characters.");
-    } catch (LogicMalformedSignal e) {
+    } catch (MalformedSignal e) {
       return;
     }
   }
@@ -140,14 +140,15 @@ public class SignalTests {
 
   @Test
   public void signal16() {
-    List<Signal> originals = Arrays.asList(new Signal[] { Signal.LO, Signal.HI, Signal.X, Signal.HI });
+    List<Signal> originals =
+        Arrays.asList(new Signal[] {Signal.LO, Signal.HI, Signal.X, Signal.HI});
     assertEquals("01X1", Signal.toString(originals));
   }
 
   @Test
   public void signal17() {
-    List<Signal> originals = Arrays
-        .asList(new Signal[] { Signal.LO, Signal.HI, Signal.X, Signal.HI, Signal.LO, Signal.HI, Signal.X, Signal.HI });
+    List<Signal> originals = Arrays.asList(new Signal[] {Signal.LO, Signal.HI, Signal.X, Signal.HI,
+        Signal.LO, Signal.HI, Signal.X, Signal.HI});
     assertEquals("01X101X1", Signal.toString(originals));
   }
 }

@@ -69,6 +69,7 @@ public class Contact implements Logic {
         if (inbound) {
             return String.format("%s(%s):%s", in.getName(), out.getName(), out.getSignal());
         }
+
         return String.format("(%s)%s", in.getName(), out);
     }
 

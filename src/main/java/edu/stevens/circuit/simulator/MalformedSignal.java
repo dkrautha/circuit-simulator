@@ -3,11 +3,11 @@ package edu.stevens.circuit.simulator;
 /**
  * Exception to indicate that a signal cound not be formed from a textual input.
  */
-public class LogicMalformedSignal extends RuntimeException {
+public class MalformedSignal extends RuntimeException {
     private char bad;
     private String msg;
 
-    public LogicMalformedSignal(char bad, String msg) {
+    public MalformedSignal(char bad, String msg) {
         this.bad = bad;
         this.msg = msg;
     }

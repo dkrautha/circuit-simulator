@@ -38,7 +38,7 @@ public enum Signal {
         if (c == 'X' || c == 'x') {
             return X;
         }
-        throw new LogicMalformedSignal(c, "Recieved a character that was not in \"01xX\"");
+        throw new MalformedSignal(c, "Recieved a character that was not in \"01xX\"");
     }
 
     public static List<Signal> fromString(String inputs) {
@@ -46,8 +46,7 @@ public enum Signal {
 
         for (char c : inputs.toCharArray()) {
             if (!"01xX \t".contains(Character.toString(c))) {
-                throw new LogicMalformedSignal(c,
-                        "Recieved a character that was not in \"01xX \t\"");
+                throw new MalformedSignal(c, "Recieved a character that was not in \"01xX \\t\"");
             }
             if (c == ' ' || c == '\t') {
                 continue;
