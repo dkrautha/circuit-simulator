@@ -51,12 +51,14 @@ public abstract class Gate implements Logic {
     @Override
     public List<Signal> inspect(List<Signal> inputs) {
         feed(inputs);
+        propagate();
         return read();
     }
 
     @Override
     public String inspectFromString(String inputs) {
         feedFromString(inputs);
+        propagate();
         return read().toString();
     }
 
@@ -88,8 +90,6 @@ public abstract class Gate implements Logic {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        System.out.println(getClass());
-        System.out.println(obj.getClass());
         Gate other = (Gate) obj;
         if (inputs == null) {
             if (other.inputs != null)
