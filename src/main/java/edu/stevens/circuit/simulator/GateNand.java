@@ -9,8 +9,26 @@ public class GateNand extends Gate {
 
     @Override
     public boolean propagate() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+        Wire outWire = getOutput();
+        Signal oldSignal = outWire.getSignal();
+        Signal newSignal = Signal.LO;
 
+        for (Wire w : getInputs()) {
+            Signal currentSignal = w.getSignal();
+            if (currentSignal.equals(Signal.LO)) {
+                newSignal = Signal.HI;
+                break;
+            }
+            if (currentSignal.equals(Signal.X)) {
+                newSignal = Signal.X;
+            }
+        }
+
+        if (oldSignal.equals(newSignal)) {
+            return false;
+        }
+
+        outWire.setSignal(newSignal);
+        return true;
+    }
 }
