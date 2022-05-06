@@ -2,7 +2,6 @@ package edu.stevens.circuit.simulator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 
 public class ExceptionTests {
@@ -35,7 +34,7 @@ public class ExceptionTests {
   // ExceptionLogicParameters tests.
   @Test()
   public void ELParams1() {
-    InvalidLogicParameters e = new InvalidLogicParameters(true, 2, 4);
+    InvalidLogicParametersException e = new InvalidLogicParametersException(true, 2, 4);
     assertEquals(true, e.isInputsRelated());
     assertEquals(2, e.getExpected());
     assertEquals(4, e.getFound());
@@ -43,7 +42,7 @@ public class ExceptionTests {
 
   @Test()
   public void ELParams2() {
-    InvalidLogicParameters e = new InvalidLogicParameters(true, 2, 4);
+    InvalidLogicParametersException e = new InvalidLogicParametersException(true, 2, 4);
     e.setInputsRelated(false);
     e.setExpected(5);
     e.setFound(3);
@@ -54,10 +53,10 @@ public class ExceptionTests {
 
   @Test()
   public void ELParams3() {
-    InvalidLogicParameters e = new InvalidLogicParameters(true, 2, 4);
+    InvalidLogicParametersException e = new InvalidLogicParametersException(true, 2, 4);
     try {
       throw e;
-    } catch (InvalidLogicParameters ex) {
+    } catch (InvalidLogicParametersException ex) {
     }
   }
 }

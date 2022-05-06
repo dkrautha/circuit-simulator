@@ -55,7 +55,7 @@ public class CircuitTests {
   Circuit simpleCircuit, simpleCircuit2, vanillaCircuit, andy;
 
   @BeforeEach
-  public void prepareCircuits() throws InvalidLogicParameters {
+  public void prepareCircuits() throws InvalidLogicParametersException {
     Wire a = new Wire("A");
     Wire b = new Wire("B");
     Wire c = new Wire("C");
@@ -86,7 +86,7 @@ public class CircuitTests {
   }
 
   // this is equivalent to the samples/andy.txt circuit.
-  public static Circuit getAndy() throws InvalidLogicParameters {
+  public static Circuit getAndy() throws InvalidLogicParametersException {
     // andy circuit's wires
     Wire andyTemp = new Wire("temp");
     Wire andyOrary = new Wire("orary");
@@ -270,7 +270,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_findWire4() throws InvalidLogicParameters {
+  public void circuit_findWire4() throws InvalidLogicParametersException {
     Optional<Wire> w = getAndy().findWire("temp");
     assertEquals(new Wire("temp"), w.get());
     w = getAndy().findWire("garbage");
@@ -278,7 +278,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_hookup1() throws InvalidLogicParameters {
+  public void circuit_hookup1() throws InvalidLogicParametersException {
     assertEquals(Arrays.asList(new Contact[] {new Contact(new Wire("A"), new Wire("A"), true),
         new Contact(new Wire("B"), new Wire("B"), true),
         new Contact(new Wire("C"), new Wire("C"), true)}), simpleCircuit.getInputs());
@@ -297,7 +297,7 @@ public class CircuitTests {
       simpleCircuit.hookUp(Arrays.asList(new Wire[] {new Wire("newA")}), // too short!
           Arrays.asList(new Wire[] {new Wire("newOut")}));
       fail("should have complained about hookUp lengths.");
-    } catch (InvalidLogicParameters e) {
+    } catch (InvalidLogicParametersException e) {
       assertEquals(3, e.getExpected());
       assertEquals(1, e.getFound());
       assertTrue(e.isInputsRelated());
@@ -305,7 +305,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_parseComponentLine_1() throws IOException, InvalidLogicParameters {
+  public void circuit_parseComponentLine_1() throws IOException, InvalidLogicParametersException {
     String line = "OR A B out -> brandNewWire";
     simpleCircuit.parseComponentLine(line);
 
@@ -324,7 +324,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_parseComponentLine_2() throws IOException, InvalidLogicParameters {
+  public void circuit_parseComponentLine_2() throws IOException, InvalidLogicParametersException {
     String line = "notnot temp -> newOUT";
     Circuit andy = getAndy();
     andy.parseComponentLine(line);
@@ -351,12 +351,12 @@ public class CircuitTests {
     try {
       simpleCircuit.parseComponentLine(line);
       fail("should have complained that OR receieved no arguments.");
-    } catch (InvalidLogicParameters e) {
+    } catch (InvalidLogicParametersException e) {
     }
   }
 
   @Test
-  public void circuit_feed1() throws InvalidLogicParameters {
+  public void circuit_feed1() throws InvalidLogicParametersException {
     simpleCircuit.feed(Arrays.asList(new Signal[] {Signal.HI, Signal.LO, Signal.X}));
     assertEquals(Signal.HI, simpleCircuit.getInputs().get(0).getIn().getSignal());
     assertEquals(Signal.LO, simpleCircuit.getInputs().get(1).getIn().getSignal());
@@ -364,7 +364,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_feed2() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_feed2() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("10X");
     assertEquals(Signal.HI, simpleCircuit.getInputs().get(0).getIn().getSignal());
     assertEquals(Signal.LO, simpleCircuit.getInputs().get(1).getIn().getSignal());
@@ -376,20 +376,20 @@ public class CircuitTests {
     try {
       simpleCircuit.feedFromString("10X1");
       fail("shouldn't have succeeded in feeding four signals to a three-input circuit.");
-    } catch (InvalidLogicParameters e) {
+    } catch (InvalidLogicParametersException e) {
       return;
     }
   }
 
   @Test
-  public void circuit_propagate1() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_propagate1() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("101");
     simpleCircuit.propagate();
     assertEquals(Signal.HI, simpleCircuit.getOutputs().get(0).getOut().getSignal());
   }
 
   @Test
-  public void circuit_propagate2() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_propagate2() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("101");
     boolean ans = simpleCircuit.propagate();
     assertTrue(ans);
@@ -398,28 +398,28 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_propagate3() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_propagate3() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("110");
     simpleCircuit.propagate();
     assertEquals(Signal.LO, simpleCircuit.getOutputs().get(0).getOut().getSignal());
   }
 
   @Test
-  public void circuit_propagate4() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_propagate4() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("X00");
     simpleCircuit.propagate();
     assertEquals(Signal.LO, simpleCircuit.getOutputs().get(0).getOut().getSignal());
   }
 
   @Test
-  public void circuit_propagate5() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_propagate5() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("10X");
     simpleCircuit.propagate();
     assertEquals(Signal.X, simpleCircuit.getOutputs().get(0).getOut().getSignal());
   }
 
   @Test
-  public void circuit_propagate6() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_propagate6() throws InvalidLogicParametersException, MalformedSignal {
     Circuit andy = getAndy();
     andy.feedFromString("00");
     andy.propagate();
@@ -427,7 +427,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_propagate7() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_propagate7() throws InvalidLogicParametersException, MalformedSignal {
     Circuit andy = getAndy();
     andy.feedFromString("10");
     andy.propagate();
@@ -438,7 +438,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_propagate8() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_propagate8() throws InvalidLogicParametersException, MalformedSignal {
     Circuit andy = getAndy();
     andy.feedFromString("11");
     andy.propagate();
@@ -446,7 +446,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_propagate9() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_propagate9() throws InvalidLogicParametersException, MalformedSignal {
     Circuit andy = getAndy();
     andy.feedFromString("0X");
     andy.propagate();
@@ -460,35 +460,35 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_read1() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_read1() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("101");
     simpleCircuit.propagate();
     assertEquals(sigs1, simpleCircuit.read());
   }
 
   @Test
-  public void circuit_read2() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_read2() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("110");
     simpleCircuit.propagate();
     assertEquals(sigs0, simpleCircuit.read());
   }
 
   @Test
-  public void circuit_read3() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_read3() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("X00");
     simpleCircuit.propagate();
     assertEquals(sigs0, simpleCircuit.read());
   }
 
   @Test
-  public void circuit_read4() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_read4() throws InvalidLogicParametersException, MalformedSignal {
     simpleCircuit.feedFromString("10X");
     simpleCircuit.propagate();
     assertEquals(sigsX, simpleCircuit.read());
   }
 
   @Test
-  public void circuit_read5() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_read5() throws InvalidLogicParametersException, MalformedSignal {
     Circuit andy = getAndy();
     andy.feedFromString("00");
     andy.propagate();
@@ -496,7 +496,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_read6() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_read6() throws InvalidLogicParametersException, MalformedSignal {
     Circuit andy = getAndy();
     andy.feedFromString("10");
     andy.propagate();
@@ -507,7 +507,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_read7() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_read7() throws InvalidLogicParametersException, MalformedSignal {
     Circuit andy = getAndy();
     andy.feedFromString("11");
     andy.propagate();
@@ -515,7 +515,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_read8() throws InvalidLogicParameters, MalformedSignal {
+  public void circuit_read8() throws InvalidLogicParametersException, MalformedSignal {
     Circuit andy = getAndy();
     andy.feedFromString("0X");
     andy.propagate();
@@ -528,7 +528,7 @@ public class CircuitTests {
     assertEquals(sigsX, andy.read());
   }
 
-  public void circuit_andy() throws IOException, InvalidLogicParameters {
+  public void circuit_andy() throws IOException, InvalidLogicParametersException {
     Circuit studentAndy = new Circuit("andy");
     Circuit handCodedAndy = getAndy();
 
@@ -555,7 +555,7 @@ public class CircuitTests {
   }
 
   @Test
-  public void circuit_toString() throws IOException, InvalidLogicParameters {
+  public void circuit_toString() throws IOException, InvalidLogicParametersException {
     assertEquals(new Circuit("andy").toString(), getAndy().toString());
   }
 }

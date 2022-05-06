@@ -16,9 +16,9 @@ public abstract class Gate implements Logic {
     private Wire output;
     private String name;
 
-    public Gate(String name, List<Wire> ins, Wire out) throws InvalidLogicParameters {
+    protected Gate(String name, List<Wire> ins, Wire out) throws InvalidLogicParametersException {
         if (ins.isEmpty()) {
-            throw new InvalidLogicParameters(true, 1, ins.size());
+            throw new InvalidLogicParametersException(true, 1, ins.size());
         }
 
         this.name = name;
@@ -27,9 +27,9 @@ public abstract class Gate implements Logic {
     }
 
     @Override
-    public void feed(List<Signal> inSignals) throws InvalidLogicParameters {
+    public void feed(List<Signal> inSignals) throws InvalidLogicParametersException {
         if (inSignals.size() != inputs.size()) {
-            throw new InvalidLogicParameters(true, inputs.size(), inSignals.size());
+            throw new InvalidLogicParametersException(true, inputs.size(), inSignals.size());
         }
 
         Iterator<Signal> sigIter = inSignals.iterator();
@@ -43,20 +43,22 @@ public abstract class Gate implements Logic {
     }
 
     @Override
-    public void feedFromString(String inSignals) throws InvalidLogicParameters, MalformedSignal {
+    public void feedFromString(String inSignals)
+            throws InvalidLogicParametersException, MalformedSignal {
         List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
 
     @Override
-    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParameters {
+    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParametersException {
         feed(inputs);
         propagate();
         return read();
     }
 
     @Override
-    public String inspectFromString(String inputs) throws InvalidLogicParameters, MalformedSignal {
+    public String inspectFromString(String inputs)
+            throws InvalidLogicParametersException, MalformedSignal {
         feedFromString(inputs);
         propagate();
         return read().toString();

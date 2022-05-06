@@ -1,10 +1,10 @@
 package edu.stevens.circuit.simulator;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+// import javafx.application.Application;
+// import javafx.fxml.FXMLLoader;
+// import javafx.scene.Parent;
+// import javafx.scene.Scene;
+// import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,7 +50,7 @@ public class App {
             Circuit c = new Circuit(circuitName);
             List<Signal> outputs = c.inspect(signals);
             System.out.println("Outputs: %s".formatted(outputs));
-        } catch (IOException | MalformedSignal | InvalidLogicParameters e) {
+        } catch (IOException | MalformedSignal | InvalidLogicParametersException e) {
             e.printStackTrace();
         }
     }

@@ -3,7 +3,7 @@ package edu.stevens.circuit.simulator;
 import java.util.List;
 
 public class GateOr extends Gate {
-    public GateOr(List<Wire> ins, Wire out) throws InvalidLogicParameters {
+    public GateOr(List<Wire> ins, Wire out) throws InvalidLogicParametersException {
         super("OR", ins, out);
     }
 

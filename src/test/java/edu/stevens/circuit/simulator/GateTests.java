@@ -4,16 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class GateTests {
-  // Common definitions
   List<Wire> wires1, wires2, wires3, wires4;
 
   @BeforeEach
@@ -46,10 +43,8 @@ public class GateTests {
   }
 
   // Gate Tests
-
-  // Gate is abstract; make an arbitrary child class and test inherited methods.
   class GateThing extends Gate {
-    public GateThing(List<Wire> i, Wire o) throws InvalidLogicParameters {
+    public GateThing(List<Wire> i, Wire o) throws InvalidLogicParametersException {
       super("gtname", i, o);
     }
 
@@ -58,7 +53,6 @@ public class GateTests {
       throw new RuntimeException("don't call propagate on me.");
     }
 
-    // just in case inspect isn't available in your Gate implementation...
     @Override
     public List<Signal> inspect(List<Signal> s) {
       throw new RuntimeException(
@@ -74,20 +68,20 @@ public class GateTests {
 
   // Gate tests.
   @Test
-  public void gate_getInputs() throws InvalidLogicParameters {
+  public void gate_getInputs() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires2, new Wire("out"));
     List<Wire> expected = Arrays.asList(new Wire[] {new Wire("a"), new Wire("b")});
     assertEquals(expected, g.getInputs());
   }
 
   @Test
-  public void gate_getOutput() throws InvalidLogicParameters {
+  public void gate_getOutput() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires2, new Wire("out"));
     assertEquals(new Wire("out"), g.getOutput());
   }
 
   @Test
-  public void gate_setInputs() throws InvalidLogicParameters {
+  public void gate_setInputs() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires2, new Wire("out"));
     g.setInputs(wires3);
     List<Wire> expected = Arrays.asList(new Wire[] {new Wire("a"), new Wire("b"), new Wire("c")});
@@ -95,72 +89,68 @@ public class GateTests {
   }
 
   @Test
-  public void gate_setOutput() throws InvalidLogicParameters {
+  public void gate_setOutput() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires2, new Wire("out"));
     g.setOutput(new Wire("newout"));
     assertEquals(new Wire("newout"), g.getOutput());
   }
 
   @Test
-  public void gate_name1() throws InvalidLogicParameters {
+  public void gate_name1() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires2, new Wire("out"));
     assertEquals("gtname", g.getName());
   }
 
   @Test
-  public void gate_name2() throws InvalidLogicParameters {
+  public void gate_name2() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires2, new Wire("out"));
     g.setName("newname");
     assertEquals("newname", g.getName());
   }
 
-  // check that feeding a List<Signal> updates the input wires' signals.
   @Test
-  public void gate_feed1() throws InvalidLogicParameters {
+  public void gate_feed1() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires2, new Wire("out"));
     g.feed(sigs01);
     assertEquals(Signal.LO, g.getInputs().get(0).getSignal());
     assertEquals(Signal.HI, g.getInputs().get(1).getSignal());
   }
 
-  // given too few parameters, should throw exception.
   @Test
-  public void gate_feed2() throws InvalidLogicParameters {
+  public void gate_feed2() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires4, new Wire("out"));
     try {
       g.feed(sigs01);
       fail("should have thrown exception, given wrong number of parameters.");
-    } catch (InvalidLogicParameters e) {
+    } catch (InvalidLogicParametersException e) {
       assertEquals(4, e.getExpected());
       assertEquals(2, e.getFound());
     }
   }
 
-  // given too few parameters, should throw exception.
   @Test
-  public void gate_feed3() throws InvalidLogicParameters, MalformedSignal {
+  public void gate_feed3() throws InvalidLogicParametersException, MalformedSignal {
     GateThing g = new GateThing(wires4, new Wire("out"));
     try {
       g.feedFromString("01");
       fail("should have thrown exception, given wrong number of parameters.");
-    } catch (InvalidLogicParameters e) {
+    } catch (InvalidLogicParametersException e) {
       assertEquals(4, e.getExpected());
       assertEquals(2, e.getFound());
     }
   }
 
-  // given too few parameters, constructor should throw exception.
   @Test
   public void gate_feed4() {
     try {
       new GateThing(new ArrayList<Wire>(), new Wire("out"));
       fail("should have thrown exception, given wrong number of parameters.");
-    } catch (InvalidLogicParameters e) {
+    } catch (InvalidLogicParametersException e) {
     }
   }
 
   @Test
-  public void gate_feed5() throws InvalidLogicParameters, MalformedSignal {
+  public void gate_feed5() throws InvalidLogicParametersException, MalformedSignal {
     GateThing g = new GateThing(wires4, new Wire("out"));
     g.feedFromString("0X11");
     assertEquals(Signal.LO, g.getInputs().get(0).getSignal());
@@ -170,13 +160,13 @@ public class GateTests {
   }
 
   @Test
-  public void gate_read1() throws InvalidLogicParameters {
+  public void gate_read1() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires4, new Wire("out"));
     assertEquals(sigsX, g.read());
   }
 
   @Test
-  public void gate_read2() throws InvalidLogicParameters {
+  public void gate_read2() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires4, new Wire("out"));
     Wire w = new Wire("out");
     w.setSignal(Signal.HI);
@@ -185,17 +175,14 @@ public class GateTests {
   }
 
   @Test
-  public void gate_toString1() throws InvalidLogicParameters {
+  public void gate_toString1() throws InvalidLogicParametersException {
     GateThing g = new GateThing(wires3, new Wire("out"));
     String expected = "gtname( [a:X, b:X, c:X] | out:X )";
     assertEquals(expected, g.toString());
   }
 
-  // after some modifications to the gate, do we still get the right string?
-  // relies upon Wire::setSignal(Signal), Gate::setOutput(Wire),
-  // Gate::setName(String), and Gate::feed(String).
   @Test
-  public void gate_toString2() throws InvalidLogicParameters, MalformedSignal {
+  public void gate_toString2() throws InvalidLogicParametersException, MalformedSignal {
     GateThing g = new GateThing(wires2, new Wire("out"));
     g.setName("NAME");
     Wire w = new Wire("w");
@@ -206,10 +193,8 @@ public class GateTests {
     assertEquals(expected, g.toString());
   }
 
-  // equals.should be comparing the names, inputs/output wires (via wires'
-  // equals() method).
   @Test
-  public void gate_equals() throws InvalidLogicParameters {
+  public void gate_equals() throws InvalidLogicParametersException {
     GateThing g1 = new GateThing(wires2, new Wire("out"));
     List<Wire> ws2 = Arrays.asList(new Wire[] {new Wire("a"), new Wire("b")});
     GateThing g2 = new GateThing(ws2, new Wire("out"));
@@ -218,7 +203,7 @@ public class GateTests {
 
   // GateAnd tests.
   @Test
-  public void gateand1() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand1() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     List<Wire> expected = Arrays.asList(new Wire[] {new Wire("a"), new Wire("b")});
     assertEquals(expected, g.getInputs());
@@ -231,7 +216,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_00() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_00() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     g.feedFromString("00");
     g.propagate();
@@ -239,7 +224,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_01() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_01() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     g.feedFromString("01");
     g.propagate();
@@ -247,7 +232,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_10() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_10() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     g.feedFromString("10");
     g.propagate();
@@ -255,7 +240,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_11() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_11() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     g.feedFromString("11");
     g.propagate();
@@ -263,7 +248,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_X0() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_X0() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     g.feedFromString("X0");
     g.propagate();
@@ -271,7 +256,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_1X() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_1X() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     g.feedFromString("1X");
     g.propagate();
@@ -279,7 +264,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_XX() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_XX() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     g.feedFromString("XX");
     g.propagate();
@@ -287,7 +272,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_111() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_111() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires3, new Wire("outa"));
     g.feedFromString("111");
     g.propagate();
@@ -295,7 +280,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_1101() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_1101() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires4, new Wire("outa"));
     g.feedFromString("1101");
     g.propagate();
@@ -303,7 +288,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateand_propagate_results() throws InvalidLogicParameters, MalformedSignal {
+  public void gateand_propagate_results() throws InvalidLogicParametersException, MalformedSignal {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
     // output : X -> LO
     g.feedFromString("00");
@@ -318,10 +303,9 @@ public class GateTests {
     assertTrue(ans);
   }
 
-
   // GateOr Tests
   @Test
-  public void gateor1() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor1() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     List<Wire> expected = Arrays.asList(new Wire[] {new Wire("a"), new Wire("b")});
     assertEquals(expected, g.getInputs());
@@ -334,7 +318,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_00() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_00() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     g.feedFromString("00");
     g.propagate();
@@ -342,7 +326,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_01() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_01() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     g.feedFromString("01");
     g.propagate();
@@ -350,7 +334,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_10() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_10() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     g.feedFromString("10");
     g.propagate();
@@ -358,7 +342,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_11() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_11() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     g.feedFromString("11");
     g.propagate();
@@ -366,7 +350,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_X0() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_X0() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     g.feedFromString("X0");
     g.propagate();
@@ -374,7 +358,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_1X() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_1X() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     g.feedFromString("1X");
     g.propagate();
@@ -382,7 +366,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_XX() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_XX() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     g.feedFromString("XX");
     g.propagate();
@@ -390,7 +374,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_111() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_111() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires3, new Wire("outa"));
     g.feedFromString("111");
     g.propagate();
@@ -398,7 +382,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_0010() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_0010() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires4, new Wire("outa"));
     g.feedFromString("0010");
     g.propagate();
@@ -406,7 +390,7 @@ public class GateTests {
   }
 
   @Test
-  public void gateor_propagate_results() throws InvalidLogicParameters, MalformedSignal {
+  public void gateor_propagate_results() throws InvalidLogicParametersException, MalformedSignal {
     GateOr g = new GateOr(wires2, new Wire("outa"));
     // output : X -> LO
     g.feedFromString("00");
@@ -423,7 +407,7 @@ public class GateTests {
 
   // GateNot Tests
   @Test
-  public void gatexor_1() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_1() throws InvalidLogicParametersException, MalformedSignal {
     GateNot g = new GateNot(new Wire("inw"), new Wire("outa"));
     List<Wire> expected = Arrays.asList(new Wire[] {new Wire("inw")});
     assertEquals(expected, g.getInputs());
@@ -435,7 +419,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenot_0() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenot_0() throws InvalidLogicParametersException, MalformedSignal {
     GateNot g = new GateNot(new Wire("inw"), new Wire("outa"));
     g.feedFromString("0");
     g.propagate();
@@ -443,7 +427,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenot_1() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenot_1() throws InvalidLogicParametersException, MalformedSignal {
     GateNot g = new GateNot(new Wire("inw"), new Wire("outa"));
     g.feedFromString("1");
     g.propagate();
@@ -451,7 +435,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenot_X() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenot_X() throws InvalidLogicParametersException, MalformedSignal {
     GateNot g = new GateNot(new Wire("inw"), new Wire("outa"));
     g.feedFromString("X");
     g.propagate();
@@ -459,7 +443,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenot_propagate_results() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenot_propagate_results() throws InvalidLogicParametersException, MalformedSignal {
     GateNot g = new GateNot(new Wire("inw"), new Wire("outa"));
     // output : X -> LO
     g.feedFromString("1");
@@ -476,7 +460,7 @@ public class GateTests {
 
   // GateXor Tests
   @Test
-  public void gatexor1() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor1() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     List<Wire> expected = Arrays.asList(new Wire[] {new Wire("a"), new Wire("b")});
     assertEquals(expected, g.getInputs());
@@ -489,7 +473,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_00() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_00() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     g.feedFromString("00");
     g.propagate();
@@ -497,7 +481,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_01() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_01() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     g.feedFromString("01");
     g.propagate();
@@ -505,7 +489,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_10() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_10() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     g.feedFromString("10");
     g.propagate();
@@ -513,7 +497,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_11() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_11() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     g.feedFromString("11");
     g.propagate();
@@ -521,7 +505,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_X0() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_X0() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     g.feedFromString("X0");
     g.propagate();
@@ -529,7 +513,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_1X() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_1X() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     g.feedFromString("1X");
     g.propagate();
@@ -537,7 +521,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_XX() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_XX() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     g.feedFromString("XX");
     g.propagate();
@@ -545,7 +529,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_011() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_011() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires3, new Wire("outa"));
     g.feedFromString("011");
     g.propagate();
@@ -553,7 +537,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_0010() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_0010() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires4, new Wire("outa"));
     g.feedFromString("0010");
     g.propagate();
@@ -561,7 +545,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatexor_propagate_results() throws InvalidLogicParameters, MalformedSignal {
+  public void gatexor_propagate_results() throws InvalidLogicParametersException, MalformedSignal {
     GateXor g = new GateXor(wires2, new Wire("outa"));
     // output : X -> LO
     g.feedFromString("00");
@@ -578,7 +562,7 @@ public class GateTests {
 
   // GateNand Tests
   @Test
-  public void gatenand_1() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_1() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     List<Wire> expected = Arrays.asList(new Wire[] {new Wire("a"), new Wire("b")});
     assertEquals(expected, g.getInputs());
@@ -591,7 +575,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_00() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_00() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     g.feedFromString("00");
     g.propagate();
@@ -599,7 +583,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_01() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_01() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     g.feedFromString("01");
     g.propagate();
@@ -607,7 +591,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_10() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_10() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     g.feedFromString("10");
     g.propagate();
@@ -615,7 +599,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_11() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_11() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     g.feedFromString("11");
     g.propagate();
@@ -623,7 +607,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_X0() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_X0() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     g.feedFromString("X0");
     g.propagate();
@@ -631,7 +615,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_1X() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_1X() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     g.feedFromString("1X");
     g.propagate();
@@ -639,7 +623,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_XX() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_XX() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     g.feedFromString("XX");
     g.propagate();
@@ -647,7 +631,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_011() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_011() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires3, new Wire("outa"));
     g.feedFromString("011");
     g.propagate();
@@ -655,7 +639,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_0010() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_0010() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires4, new Wire("outa"));
     g.feedFromString("0010");
     g.propagate();
@@ -663,7 +647,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenand_propagate_results() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenand_propagate_results() throws InvalidLogicParametersException, MalformedSignal {
     GateNand g = new GateNand(wires2, new Wire("outa"));
     // output : X -> LO
     g.feedFromString("11");
@@ -680,7 +664,7 @@ public class GateTests {
 
   // GateNor Tests
   @Test
-  public void gatenor_1() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_1() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     List<Wire> expected = Arrays.asList(new Wire[] {new Wire("a"), new Wire("b")});
     assertEquals(expected, g.getInputs());
@@ -693,7 +677,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_00() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_00() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     g.feedFromString("00");
     g.propagate();
@@ -701,7 +685,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_01() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_01() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     g.feedFromString("01");
     g.propagate();
@@ -709,7 +693,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_10() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_10() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     g.feedFromString("10");
     g.propagate();
@@ -717,7 +701,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_11() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_11() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     g.feedFromString("11");
     g.propagate();
@@ -725,7 +709,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_X0() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_X0() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     g.feedFromString("X0");
     g.propagate();
@@ -733,7 +717,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_1X() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_1X() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     g.feedFromString("1X");
     g.propagate();
@@ -741,7 +725,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_XX() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_XX() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     g.feedFromString("XX");
     g.propagate();
@@ -749,7 +733,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_011() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_011() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires3, new Wire("outa"));
     g.feedFromString("011");
     g.propagate();
@@ -757,7 +741,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_0010() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_0010() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires4, new Wire("outa"));
     g.feedFromString("0010");
     g.propagate();
@@ -765,7 +749,7 @@ public class GateTests {
   }
 
   @Test
-  public void gatenor_propagate_results() throws InvalidLogicParameters, MalformedSignal {
+  public void gatenor_propagate_results() throws InvalidLogicParametersException, MalformedSignal {
     GateNor g = new GateNor(wires2, new Wire("outa"));
     // output : X -> HI
     g.feedFromString("00");

@@ -78,5 +78,4 @@ public enum Signal {
 
         return b.toString();
     }
-
 }

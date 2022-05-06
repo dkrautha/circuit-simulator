@@ -5,12 +5,12 @@ package edu.stevens.circuit.simulator;
  * 
  * Thrown when there are either not enough, or too many parameters for a Gate or Circuit.
  */
-public class InvalidLogicParameters extends Exception {
+public class InvalidLogicParametersException extends Exception {
     private boolean inputsRelated;
     private int expected;
     private int found;
 
-    public InvalidLogicParameters(boolean inputsRelated, int expected, int found) {
+    public InvalidLogicParametersException(boolean inputsRelated, int expected, int found) {
         this.inputsRelated = inputsRelated;
         this.expected = expected;
         this.found = found;

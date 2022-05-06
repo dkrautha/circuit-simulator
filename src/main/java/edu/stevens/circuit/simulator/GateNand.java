@@ -3,7 +3,7 @@ package edu.stevens.circuit.simulator;
 import java.util.List;
 
 public class GateNand extends Gate {
-    public GateNand(List<Wire> ins, Wire out) throws InvalidLogicParameters {
+    public GateNand(List<Wire> ins, Wire out) throws InvalidLogicParametersException {
         super("NAND", ins, out);
     }
 

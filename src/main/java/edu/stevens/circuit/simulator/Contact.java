@@ -15,16 +15,17 @@ public class Contact implements Logic {
     }
 
     @Override
-    public void feed(List<Signal> inSignals) throws InvalidLogicParameters {
+    public void feed(List<Signal> inSignals) throws InvalidLogicParametersException {
         if (inSignals.size() != 1) {
-            throw new InvalidLogicParameters(true, 1, inSignals.size());
+            throw new InvalidLogicParametersException(true, 1, inSignals.size());
         }
 
         in.setSignal(inSignals.get(0));
     }
 
     @Override
-    public void feedFromString(String inSignals) throws InvalidLogicParameters, MalformedSignal {
+    public void feedFromString(String inSignals)
+            throws InvalidLogicParametersException, MalformedSignal {
         List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
@@ -48,14 +49,15 @@ public class Contact implements Logic {
     }
 
     @Override
-    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParameters {
+    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParametersException {
         feed(inputs);
         propagate();
         return read();
     }
 
     @Override
-    public String inspectFromString(String inputs) throws InvalidLogicParameters, MalformedSignal {
+    public String inspectFromString(String inputs)
+            throws InvalidLogicParametersException, MalformedSignal {
         feedFromString(inputs);
         propagate();
         return read().toString();

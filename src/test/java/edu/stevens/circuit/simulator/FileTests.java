@@ -2,16 +2,15 @@ package edu.stevens.circuit.simulator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.IOException;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 public class FileTests {
   public static boolean assertOutsMatch(List<Wire> outs, List<Signal> sigs) {
     if (outs.size() != sigs.size()) {
-      fail(String.format("wrong number of output wires (%d) vs. signals (%d).", outs.size(), sigs.size()));
+      fail(String.format("wrong number of output wires (%d) vs. signals (%d).", outs.size(),
+          sigs.size()));
     }
     for (int i = 0; i < outs.size(); i++) {
       if (outs.get(i).getSignal() != sigs.get(i))
@@ -20,14 +19,16 @@ public class FileTests {
     return true;
   }
 
-  public static void test_circuit(Circuit c, String inputs, String expectedOutputs) throws InvalidLogicParameters, MalformedSignal {
+  public static void test_circuit(Circuit c, String inputs, String expectedOutputs)
+      throws InvalidLogicParametersException, MalformedSignal {
     List<Signal> sigIns = Signal.fromString(inputs);
     List<Signal> sigOuts = c.inspect(sigIns);
     String actualOuts = Signal.toString(sigOuts);
     assertEquals(expectedOutputs, actualOuts);
   }
 
-  public static void test_circuit(String filename, String inputs, String expectedOutputs) throws InvalidLogicParameters, MalformedSignal {
+  public static void test_circuit(String filename, String inputs, String expectedOutputs)
+      throws InvalidLogicParametersException, MalformedSignal {
     try {
       test_circuit(new Circuit(filename), inputs, expectedOutputs);
     } catch (IOException e) {
@@ -35,58 +36,43 @@ public class FileTests {
     }
   }
 
-  // ==========================================================================================
-  // ==========================================================================================
-  // ==========================================================================================
-  // ==========================================================================================
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_not_0() throws InvalidLogicParameters, MalformedSignal {
+  public void file_not_0() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("not", "0", "1");
   }
 
   @Test
-  public void file_not_1() throws InvalidLogicParameters, MalformedSignal {
+  public void file_not_1() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("not", "1", "0");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_not_X() throws InvalidLogicParameters, MalformedSignal {
+  public void file_not_X() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("not", "X", "X");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_and_00() throws InvalidLogicParameters, MalformedSignal {
+  public void file_and_00() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("and", "00", "0");
   }
 
   @Test
-  public void file_and_01() throws InvalidLogicParameters, MalformedSignal {
+  public void file_and_01() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("and", "01", "0");
   }
 
   @Test
-  public void file_and_10() throws InvalidLogicParameters, MalformedSignal {
+  public void file_and_10() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("and", "10", "0");
   }
 
   @Test
-  public void file_and_11() throws InvalidLogicParameters, MalformedSignal {
+  public void file_and_11() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("and", "11", "1");
   }
 
-  // ------------------------------------------------------------------------------------------
-
   @Test
-  public void file_and_2_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_and_2_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("and", "0X", "0");
     test_circuit("and", "X0", "0");
     test_circuit("and", "1X", "X");
@@ -94,21 +80,15 @@ public class FileTests {
     test_circuit("and", "XX", "X");
   }
 
-  // ------------------------------------------------------------------------------------------
-
   @Test
-  public void file_and_single() throws InvalidLogicParameters, MalformedSignal {
+  public void file_and_single() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("and1", "0", "0");
     test_circuit("and1", "1", "1");
     test_circuit("and1", "X", "X");
   }
 
-  // ------------------------------------------------------------------------------------------
-
-  // Exhaustive 3-inputs test of an AND gate.
-
   @Test
-  public void file_and_3s() throws InvalidLogicParameters, MalformedSignal {
+  public void file_and_3s() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("and_3in", "000", "0");
     test_circuit("and_3in", "001", "0");
     test_circuit("and_3in", "010", "0");
@@ -120,7 +100,7 @@ public class FileTests {
   }
 
   @Test
-  public void file_and_3_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_and_3_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("and_3in", "00X", "0");
     test_circuit("and_3in", "01X", "0");
     test_circuit("and_3in", "0X0", "0");
@@ -142,21 +122,16 @@ public class FileTests {
     test_circuit("and_3in", "XXX", "X");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_or() throws InvalidLogicParameters, MalformedSignal {
+  public void file_or() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("or", "00", "0");
     test_circuit("or", "01", "1");
     test_circuit("or", "10", "1");
     test_circuit("or", "11", "1");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_or_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_or_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("or", "0X", "X");
     test_circuit("or", "X0", "X");
     test_circuit("or", "1X", "1");
@@ -164,21 +139,16 @@ public class FileTests {
     test_circuit("or", "XX", "X");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_xor() throws InvalidLogicParameters, MalformedSignal {
+  public void file_xor() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("xor", "00", "0");
     test_circuit("xor", "01", "1");
     test_circuit("xor", "10", "1");
     test_circuit("xor", "11", "0");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_xor_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_xor_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("xor", "0X", "X");
     test_circuit("xor", "X0", "X");
     test_circuit("xor", "1X", "X");
@@ -186,21 +156,16 @@ public class FileTests {
     test_circuit("xor", "XX", "X");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_nand() throws InvalidLogicParameters, MalformedSignal {
+  public void file_nand() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("nand", "00", "1");
     test_circuit("nand", "01", "1");
     test_circuit("nand", "10", "1");
     test_circuit("nand", "11", "0");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_nand_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_nand_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("nand", "0X", "1");
     test_circuit("nand", "X0", "1");
     test_circuit("nand", "1X", "X");
@@ -208,21 +173,16 @@ public class FileTests {
     test_circuit("nand", "XX", "X");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_nor() throws InvalidLogicParameters, MalformedSignal {
+  public void file_nor() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("nor", "00", "1");
     test_circuit("nor", "01", "0");
     test_circuit("nor", "10", "0");
     test_circuit("nor", "11", "0");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_nor_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_nor_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("nor", "0X", "X");
     test_circuit("nor", "X0", "X");
     test_circuit("nor", "1X", "0");
@@ -230,12 +190,8 @@ public class FileTests {
     test_circuit("nor", "XX", "X");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_1() throws InvalidLogicParameters, MalformedSignal {
+  public void file_1() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("1", "000", "0");
     test_circuit("1", "001", "1");
     test_circuit("1", "010", "0");
@@ -246,9 +202,8 @@ public class FileTests {
     test_circuit("1", "111", "1");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_1_xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_1_xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("1", "00X", "X");
     test_circuit("1", "0X0", "0");
     test_circuit("1", "X00", "0");
@@ -270,12 +225,8 @@ public class FileTests {
     test_circuit("1", "XXX", "X");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_2() throws InvalidLogicParameters, MalformedSignal {
+  public void file_2() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("2", "000", "0");
     test_circuit("2", "001", "0");
     test_circuit("2", "010", "0");
@@ -286,9 +237,8 @@ public class FileTests {
     test_circuit("2", "111", "1");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_2_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_2_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("2", "00X", "0");
     test_circuit("2", "0X0", "0");
     test_circuit("2", "X00", "0");
@@ -310,21 +260,16 @@ public class FileTests {
     test_circuit("2", "XXX", "X");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_halfadder() throws InvalidLogicParameters, MalformedSignal {
+  public void file_halfadder() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("halfadder", "00", "00");
     test_circuit("halfadder", "01", "01");
     test_circuit("halfadder", "10", "01");
     test_circuit("halfadder", "11", "10");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_halfadder_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_halfadder_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("halfadder", "0X", "0X");
     test_circuit("halfadder", "X0", "0X");
     test_circuit("halfadder", "1X", "XX");
@@ -332,12 +277,8 @@ public class FileTests {
     test_circuit("halfadder", "XX", "XX");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_fulladder_basic() throws InvalidLogicParameters, MalformedSignal {
+  public void file_fulladder_basic() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("fulladder_basic", "000", "00");
     test_circuit("fulladder_basic", "001", "01");
     test_circuit("fulladder_basic", "010", "01");
@@ -348,9 +289,8 @@ public class FileTests {
     test_circuit("fulladder_basic", "111", "11");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_fulladder_basic_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_fulladder_basic_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("fulladder_basic", "00X", "0X");
     test_circuit("fulladder_basic", "0X0", "0X");
     test_circuit("fulladder_basic", "X00", "0X");
@@ -372,12 +312,8 @@ public class FileTests {
     test_circuit("fulladder_basic", "XXX", "XX");
   }
 
-  // ==========================================================================================
-
-  // Exhaustive.
-
   @Test
-  public void file_fulladder() throws InvalidLogicParameters, MalformedSignal {
+  public void file_fulladder() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("fulladder", "000", "00");
     test_circuit("fulladder", "001", "01");
     test_circuit("fulladder", "010", "01");
@@ -388,9 +324,8 @@ public class FileTests {
     test_circuit("fulladder", "111", "11");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_fulladder_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_fulladder_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("fulladder", "00X", "0X");
     test_circuit("fulladder", "0X0", "0X");
     test_circuit("fulladder", "X00", "0X");
@@ -412,10 +347,8 @@ public class FileTests {
     test_circuit("fulladder", "XXX", "XX");
   }
 
-  // ==========================================================================================
-
   @Test
-  public void file_mux_4_to_1() throws InvalidLogicParameters, MalformedSignal {
+  public void file_mux_4_to_1() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("mux_4_to_1", "1000 00", "1");
     test_circuit("mux_4_to_1", "0111 00", "0");
     test_circuit("mux_4_to_1", "0100 10", "1");
@@ -426,9 +359,8 @@ public class FileTests {
     test_circuit("mux_4_to_1", "1110 11", "0");
   }
 
-  // check various X's.
   @Test
-  public void file_mux_4_to_1_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_mux_4_to_1_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("mux_4_to_1", "X000 00", "X");
     test_circuit("mux_4_to_1", "X111 00", "X");
     test_circuit("mux_4_to_1", "0X00 10", "X");
@@ -436,18 +368,12 @@ public class FileTests {
     test_circuit("mux_4_to_1", "00X0 01", "X");
     test_circuit("mux_4_to_1", "000X 11", "X");
     test_circuit("mux_4_to_1", "XXXX 01", "X");
-
-    test_circuit("mux_4_to_1", "0000 XX", "0"); // all the AND gates will be low, so the OR gate will definitely be low.
-    test_circuit("mux_4_to_1", "1111 XX", "X"); //
-
+    test_circuit("mux_4_to_1", "0000 XX", "0");
+    test_circuit("mux_4_to_1", "1111 XX", "X");
   }
 
-  // ==========================================================================================
-
-  // not exhaustive.
-
   @Test
-  public void file_ripple4() throws InvalidLogicParameters, MalformedSignal {
+  public void file_ripple4() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("ripple4", "0000 0000 0", "00000");
     test_circuit("ripple4", "0100 1100 0", "10100");
     test_circuit("ripple4", "0100 1100 1", "01100");
@@ -455,20 +381,16 @@ public class FileTests {
     test_circuit("ripple4", "1110 1001 1", "10001");
   }
 
-  // ==========================================================================================
-  // Exhaustive.
-
   @Test
-  public void file_nand_derived() throws InvalidLogicParameters, MalformedSignal {
+  public void file_nand_derived() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("nand_derived", "00", "1");
     test_circuit("nand_derived", "01", "1");
     test_circuit("nand_derived", "10", "1");
     test_circuit("nand_derived", "11", "0");
   }
 
-  // ------------------------------------------------------------------------------------------
   @Test
-  public void file_nand_derived_Xs() throws InvalidLogicParameters, MalformedSignal {
+  public void file_nand_derived_Xs() throws InvalidLogicParametersException, MalformedSignal {
     test_circuit("nand_derived", "0X", "1");
     test_circuit("nand_derived", "X0", "1");
     test_circuit("nand_derived", "1X", "X");

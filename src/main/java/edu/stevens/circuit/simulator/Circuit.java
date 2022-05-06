@@ -28,7 +28,7 @@ public class Circuit implements Logic {
         this.importables = importables;
     }
 
-    public Circuit(String circuitName) throws IOException, InvalidLogicParameters {
+    public Circuit(String circuitName) throws IOException, InvalidLogicParametersException {
         this.components = new ArrayList<>();
         this.inputs = new ArrayList<>();
         this.outputs = new ArrayList<>();
@@ -40,7 +40,7 @@ public class Circuit implements Logic {
         boolean contactParsedYet = false;
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (line.isEmpty()) {
+            if (line.isBlank()) {
                 continue;
             }
             if (!contactParsedYet) {
@@ -104,12 +104,12 @@ public class Circuit implements Logic {
         return Optional.empty();
     }
 
-    public void hookUp(List<Wire> inWires, List<Wire> outWires) throws InvalidLogicParameters {
+    public void hookUp(List<Wire> inWires, List<Wire> outWires) throws InvalidLogicParametersException {
         if (inWires.size() != inputs.size()) {
-            throw new InvalidLogicParameters(true, inputs.size(), inWires.size());
+            throw new InvalidLogicParametersException(true, inputs.size(), inWires.size());
         }
         if (outWires.size() != outputs.size()) {
-            throw new InvalidLogicParameters(false, inputs.size(), outWires.size());
+            throw new InvalidLogicParametersException(false, inputs.size(), outWires.size());
         }
 
         Iterator<Contact> inputsIter = inputs.iterator();
@@ -131,13 +131,13 @@ public class Circuit implements Logic {
         }
     }
 
-    private void parseNot(List<String> split) throws InvalidLogicParameters {
+    private void parseNot(List<String> split) throws InvalidLogicParametersException {
         if (split.size() != 4) {
             int arrowIndex = split.indexOf("->");
             if (arrowIndex != 2) {
-                throw new InvalidLogicParameters(true, 1, arrowIndex - 1);
+                throw new InvalidLogicParametersException(true, 1, arrowIndex - 1);
             }
-            throw new InvalidLogicParameters(false, 1, split.size() - arrowIndex - 1);
+            throw new InvalidLogicParametersException(false, 1, split.size() - arrowIndex - 1);
         }
 
         String inputWireName = split.get(1);
@@ -156,17 +156,17 @@ public class Circuit implements Logic {
         components.add(new GateNot(input, output));
     }
 
-    private void parseGate(List<String> split, int gateIndex) throws InvalidLogicParameters {
+    private void parseGate(List<String> split, int gateIndex) throws InvalidLogicParametersException {
         int arrowIndex = split.indexOf("->");
         if (arrowIndex != split.size() - 2) {
-            throw new InvalidLogicParameters(false, 1, arrowIndex);
+            throw new InvalidLogicParametersException(false, 1, arrowIndex);
         }
 
-        List<Wire> inputs = new ArrayList<>();
+        List<Wire> ins = new ArrayList<>();
         for (int i = 1; i < arrowIndex; i += 1) {
             String inputName = split.get(i);
             Wire w = findWire(inputName).get();
-            inputs.add(w);
+            ins.add(w);
         }
 
         String outputName = split.get(split.size() - 1);
@@ -181,24 +181,24 @@ public class Circuit implements Logic {
 
         switch (gateIndex) {
             case 0:
-                components.add(new GateAnd(inputs, output));
+                components.add(new GateAnd(ins, output));
                 break;
             case 1:
-                components.add(new GateOr(inputs, output));
+                components.add(new GateOr(ins, output));
                 break;
             case 2:
-                components.add(new GateXor(inputs, output));
+                components.add(new GateXor(ins, output));
                 break;
             case 3:
-                components.add(new GateNand(inputs, output));
+                components.add(new GateNand(ins, output));
                 break;
             case 4:
-                components.add(new GateNor(inputs, output));
+                components.add(new GateNor(ins, output));
                 break;
         }
     }
 
-    public void parseComponentLine(String line) throws IOException, InvalidLogicParameters {
+    public void parseComponentLine(String line) throws IOException, InvalidLogicParametersException {
         List<String> split = Arrays.asList(line.split("\\s+"));
         String componentType = split.get(0);
         // unique case for NOT
@@ -241,9 +241,9 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public void feed(List<Signal> inSignals) throws InvalidLogicParameters {
+    public void feed(List<Signal> inSignals) throws InvalidLogicParametersException {
         if (inSignals.size() != inputs.size()) {
-            throw new InvalidLogicParameters(true, inputs.size(), inSignals.size());
+            throw new InvalidLogicParametersException(true, inputs.size(), inSignals.size());
         }
 
         Iterator<Signal> signalsIter = inSignals.iterator();
@@ -258,7 +258,7 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public void feedFromString(String inSignals) throws InvalidLogicParameters, MalformedSignal {
+    public void feedFromString(String inSignals) throws InvalidLogicParametersException, MalformedSignal {
         List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
@@ -287,17 +287,16 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParameters {
+    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParametersException {
         feed(inputs);
         propagate();
         return read();
     }
 
     @Override
-    public String inspectFromString(String inputs) throws InvalidLogicParameters, MalformedSignal {
+    public String inspectFromString(String inputs) throws InvalidLogicParametersException, MalformedSignal {
         List<Signal> i = Signal.fromString(inputs);
-        inspect(i);
-        return read().toString();
+        return Signal.toString(inspect(i));
     }
 
     public static String indent(String s) {
