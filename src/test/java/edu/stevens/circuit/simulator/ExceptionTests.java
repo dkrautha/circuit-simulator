@@ -9,22 +9,23 @@ public class ExceptionTests {
   // MalformedSignal tests.
   @Test
   public void malformedSignal1() {
-    MalformedSignal e = new MalformedSignal('c', "I didn't like that character.");
+    MalformedSignal e = new MalformedSignal('c');
     assertTrue('c' == e.getBad());
   }
 
   @Test
   public void malformedSignal2() {
-    MalformedSignal e = new MalformedSignal('Z', "short");
+    MalformedSignal e = new MalformedSignal('Z');
     e.setBad('q');
-    e.setMsg("NEW MSG");
     assertTrue('q' == e.getBad());
-    assertEquals("NEW MSG", e.getMsg());
+    assertEquals(
+        "edu.stevens.circuit.simulator.MalformedSignal: recieved a character 'q' that was not in \"01xX\"",
+        e.toString());
   }
 
   @Test
   public void malformedSignal3() {
-    MalformedSignal e = new MalformedSignal('Z', "short");
+    MalformedSignal e = new MalformedSignal('Z');
     try {
       throw e;
     } catch (MalformedSignal ex) {

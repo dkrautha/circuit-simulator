@@ -3,7 +3,7 @@ package edu.stevens.circuit.simulator;
 import java.util.List;
 
 public class GateNor extends Gate {
-    public GateNor(List<Wire> ins, Wire out) {
+    public GateNor(List<Wire> ins, Wire out) throws InvalidLogicParameters {
         super("NOR", ins, out);
     }
 

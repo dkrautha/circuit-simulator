@@ -3,18 +3,18 @@ package edu.stevens.circuit.simulator;
 /**
  * Exception to indicate that a signal cound not be formed from a textual input.
  */
-public class MalformedSignal extends RuntimeException {
+public class MalformedSignal extends Exception {
     private char bad;
-    private String msg;
 
-    public MalformedSignal(char bad, String msg) {
+    public MalformedSignal(char bad) {
         this.bad = bad;
-        this.msg = msg;
     }
 
     @Override
     public String toString() {
-        return msg;
+        return String.format(
+                "edu.stevens.circuit.simulator.MalformedSignal: recieved a character '%c' that was not in \"01xX\"",
+                bad);
     }
 
     public char getBad() {
@@ -24,13 +24,4 @@ public class MalformedSignal extends RuntimeException {
     public void setBad(char bad) {
         this.bad = bad;
     }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
 }

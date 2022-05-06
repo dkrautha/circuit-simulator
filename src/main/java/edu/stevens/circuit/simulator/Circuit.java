@@ -28,7 +28,7 @@ public class Circuit implements Logic {
         this.importables = importables;
     }
 
-    public Circuit(String circuitName) throws IOException {
+    public Circuit(String circuitName) throws IOException, InvalidLogicParameters {
         this.components = new ArrayList<>();
         this.inputs = new ArrayList<>();
         this.outputs = new ArrayList<>();
@@ -104,7 +104,7 @@ public class Circuit implements Logic {
         return Optional.empty();
     }
 
-    public void hookUp(List<Wire> inWires, List<Wire> outWires) {
+    public void hookUp(List<Wire> inWires, List<Wire> outWires) throws InvalidLogicParameters {
         if (inWires.size() != inputs.size()) {
             throw new InvalidLogicParameters(true, inputs.size(), inWires.size());
         }
@@ -156,7 +156,7 @@ public class Circuit implements Logic {
         components.add(new GateNot(input, output));
     }
 
-    private void parseGate(List<String> split, int gateIndex) {
+    private void parseGate(List<String> split, int gateIndex) throws InvalidLogicParameters {
         int arrowIndex = split.indexOf("->");
         if (arrowIndex != split.size() - 2) {
             throw new InvalidLogicParameters(false, 1, arrowIndex);
@@ -241,7 +241,7 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public void feed(List<Signal> inSignals) {
+    public void feed(List<Signal> inSignals) throws InvalidLogicParameters {
         if (inSignals.size() != inputs.size()) {
             throw new InvalidLogicParameters(true, inputs.size(), inSignals.size());
         }
@@ -258,7 +258,7 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public void feedFromString(String inSignals) {
+    public void feedFromString(String inSignals) throws InvalidLogicParameters, MalformedSignal {
         List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
@@ -287,14 +287,14 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public List<Signal> inspect(List<Signal> inputs) {
+    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParameters {
         feed(inputs);
         propagate();
         return read();
     }
 
     @Override
-    public String inspectFromString(String inputs) {
+    public String inspectFromString(String inputs) throws InvalidLogicParameters, MalformedSignal {
         List<Signal> i = Signal.fromString(inputs);
         inspect(i);
         return read().toString();

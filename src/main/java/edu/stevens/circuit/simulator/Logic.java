@@ -13,15 +13,18 @@ public interface Logic {
      * these wire will be attached to Contact points.
      * 
      * @param inSignals
+     * @throws InvalidLogicParameters
      */
-    public void feed(List<Signal> inSignals);
+    public void feed(List<Signal> inSignals) throws InvalidLogicParameters;
 
     /**
      * Performs the same actions as feed(), but accepts a String as input.
      * 
      * @param inSignals
+     * @throws InvalidLogicParameters
+     * @throws MalformedSignal
      */
-    public void feedFromString(String inSignals);
+    public void feedFromString(String inSignals) throws InvalidLogicParameters, MalformedSignal;
 
     /**
      * Lets all inner components perform their logic and generate outputs.
@@ -44,14 +47,17 @@ public interface Logic {
      * 
      * @param inputs
      * @return Output wires values as a list, after logic have been performed.
+     * @throws InvalidLogicParameters
      */
-    public List<Signal> inspect(List<Signal> inputs);
+    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParameters;
 
     /**
      * Performs the same actions as inspect(), but accepts a String as input.
      * 
      * @param inputs
      * @return
+     * @throws InvalidLogicParameters
+     * @throws MalformedSignal
      */
-    public String inspectFromString(String inputs);
+    public String inspectFromString(String inputs) throws InvalidLogicParameters, MalformedSignal;
 }

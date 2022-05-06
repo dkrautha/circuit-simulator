@@ -16,7 +16,7 @@ public abstract class Gate implements Logic {
     private Wire output;
     private String name;
 
-    public Gate(String name, List<Wire> ins, Wire out) {
+    public Gate(String name, List<Wire> ins, Wire out) throws InvalidLogicParameters {
         if (ins.isEmpty()) {
             throw new InvalidLogicParameters(true, 1, ins.size());
         }
@@ -27,7 +27,7 @@ public abstract class Gate implements Logic {
     }
 
     @Override
-    public void feed(List<Signal> inSignals) {
+    public void feed(List<Signal> inSignals) throws InvalidLogicParameters {
         if (inSignals.size() != inputs.size()) {
             throw new InvalidLogicParameters(true, inputs.size(), inSignals.size());
         }
@@ -43,20 +43,20 @@ public abstract class Gate implements Logic {
     }
 
     @Override
-    public void feedFromString(String inSignals) {
+    public void feedFromString(String inSignals) throws InvalidLogicParameters, MalformedSignal {
         List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
 
     @Override
-    public List<Signal> inspect(List<Signal> inputs) {
+    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParameters {
         feed(inputs);
         propagate();
         return read();
     }
 
     @Override
-    public String inspectFromString(String inputs) {
+    public String inspectFromString(String inputs) throws InvalidLogicParameters, MalformedSignal {
         feedFromString(inputs);
         propagate();
         return read().toString();

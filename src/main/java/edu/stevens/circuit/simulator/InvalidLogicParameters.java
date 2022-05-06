@@ -5,7 +5,7 @@ package edu.stevens.circuit.simulator;
  * 
  * Thrown when there are either not enough, or too many parameters for a Gate or Circuit.
  */
-public class InvalidLogicParameters extends RuntimeException {
+public class InvalidLogicParameters extends Exception {
     private boolean inputsRelated;
     private int expected;
     private int found;
@@ -19,8 +19,9 @@ public class InvalidLogicParameters extends RuntimeException {
     @Override
     public String toString() {
         String related = inputsRelated ? "inputs" : "outputs";
-        return String.format("An error occured! Expected %d %s, Found: %d %s", expected, related,
-                found, related);
+        return String.format(
+                "edu.stevens.circuit.simulator.InvalidLogicParameters: expected %d %s, found: %d %s",
+                expected, related, found, related);
     }
 
     public boolean isInputsRelated() {

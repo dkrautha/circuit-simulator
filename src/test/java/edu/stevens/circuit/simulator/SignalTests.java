@@ -53,22 +53,22 @@ public class SignalTests {
   }
 
   @Test
-  public void signal5() {
+  public void signal5() throws MalformedSignal {
     assertEquals(Signal.HI, Signal.fromChar('1'));
   }
 
   @Test
-  public void signal6() {
+  public void signal6() throws MalformedSignal {
     assertEquals(Signal.LO, Signal.fromChar('0'));
   }
 
   @Test
-  public void signal7() {
+  public void signal7() throws MalformedSignal {
     assertEquals(Signal.X, Signal.fromChar('X'));
   }
 
   @Test
-  public void signal8() {
+  public void signal8() throws MalformedSignal {
     assertEquals(Signal.X, Signal.fromChar('x'));
   }
 
@@ -95,7 +95,7 @@ public class SignalTests {
   }
 
   @Test
-  public void signal11() {
+  public void signal11() throws MalformedSignal {
     String inp = "110X";
     List<Signal> actuals = Signal.fromString(inp);
     List<Signal> expecteds =
@@ -104,7 +104,7 @@ public class SignalTests {
   }
 
   @Test
-  public void signal12() {
+  public void signal12() throws MalformedSignal {
     String inp = "";
     List<Signal> expecteds = Arrays.asList(new Signal[] {});
     List<Signal> actuals = Signal.fromString(inp);
@@ -112,7 +112,7 @@ public class SignalTests {
   }
 
   @Test
-  public void signal13() {
+  public void signal13() throws MalformedSignal {
     String inp = "1 x \tX 00";
     List<Signal> expecteds =
         Arrays.asList(new Signal[] {Signal.HI, Signal.X, Signal.X, Signal.LO, Signal.LO});

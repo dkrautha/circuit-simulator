@@ -3,7 +3,7 @@ package edu.stevens.circuit.simulator;
 import java.util.Arrays;
 
 public class GateNot extends Gate {
-    public GateNot(Wire input, Wire out) {
+    public GateNot(Wire input, Wire out) throws InvalidLogicParameters {
         super("NOT", Arrays.asList(input), out);
     }
 

@@ -3,7 +3,7 @@ package edu.stevens.circuit.simulator;
 import java.util.List;
 
 public class GateXor extends Gate {
-    public GateXor(List<Wire> ins, Wire out) {
+    public GateXor(List<Wire> ins, Wire out) throws InvalidLogicParameters {
         super("XOR", ins, out);
     }
 
