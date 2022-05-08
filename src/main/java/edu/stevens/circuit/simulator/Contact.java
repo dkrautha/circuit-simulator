@@ -2,6 +2,7 @@ package edu.stevens.circuit.simulator;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Contact implements Logic {
     private Wire in;
@@ -25,7 +26,7 @@ public class Contact implements Logic {
 
     @Override
     public void feedFromString(String inSignals)
-            throws InvalidLogicParametersException, MalformedSignal {
+            throws InvalidLogicParametersException, MalformedSignalException {
         List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
@@ -57,7 +58,7 @@ public class Contact implements Logic {
 
     @Override
     public String inspectFromString(String inputs)
-            throws InvalidLogicParametersException, MalformedSignal {
+            throws InvalidLogicParametersException, MalformedSignalException {
         feedFromString(inputs);
         propagate();
         return read().toString();
@@ -75,38 +76,30 @@ public class Contact implements Logic {
         return String.format("(%s)%s", in.getName(), out);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((in == null) ? 0 : in.hashCode());
-        result = prime * result + (inbound ? 1231 : 1237);
-        result = prime * result + ((out == null) ? 0 : out.hashCode());
-        return result;
+        return Objects.hash(in, inbound, out);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
+        if (!(obj instanceof Contact))
             return false;
         Contact other = (Contact) obj;
-        if (in == null) {
-            if (other.in != null)
-                return false;
-        } else if (!in.equals(other.in))
-            return false;
-        if (inbound != other.inbound)
-            return false;
-        if (out == null) {
-            if (other.out != null)
-                return false;
-        } else if (!out.equals(other.out))
-            return false;
-        return true;
+        return Objects.equals(in, other.in) && inbound == other.inbound
+                && Objects.equals(out, other.out);
     }
 
     public Wire getIn() {

@@ -28,7 +28,7 @@ public enum Signal {
         return X;
     }
 
-    public static Signal fromChar(char c) throws MalformedSignal {
+    public static Signal fromChar(char c) throws MalformedSignalException {
         if (c == '1') {
             return HI;
         }
@@ -38,15 +38,15 @@ public enum Signal {
         if (c == 'X' || c == 'x') {
             return X;
         }
-        throw new MalformedSignal(c);
+        throw new MalformedSignalException(c);
     }
 
-    public static List<Signal> fromString(String inputs) throws MalformedSignal {
+    public static List<Signal> fromString(String inputs) throws MalformedSignalException {
         List<Signal> list = new ArrayList<>();
 
         for (char c : inputs.toCharArray()) {
             if (!"01xX \t".contains(Character.toString(c))) {
-                throw new MalformedSignal(c);
+                throw new MalformedSignalException(c);
             }
             if (c == ' ' || c == '\t') {
                 continue;

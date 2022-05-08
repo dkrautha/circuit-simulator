@@ -37,6 +37,15 @@ import java.util.List;
 // }
 
 public class App {
+    static Circuit checkIfFeedbackCircuit(String circuitName)
+            throws IOException, InvalidLogicParametersException {
+        try {
+            return new Circuit(circuitName);
+        } catch (FeedbackCircuitDetectedException e) {
+            return new FeedbackCircuit(circuitName);
+        }
+    }
+
     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println(
@@ -47,10 +56,10 @@ public class App {
         String circuitName = args[0];
         try {
             List<Signal> signals = Signal.fromString(args[1]);
-            Circuit c = new Circuit(circuitName);
+            Circuit c = checkIfFeedbackCircuit(circuitName);
             List<Signal> outputs = c.inspect(signals);
             System.out.println("Outputs: %s".formatted(outputs));
-        } catch (IOException | MalformedSignal | InvalidLogicParametersException e) {
+        } catch (IOException | MalformedSignalException | InvalidLogicParametersException e) {
             e.printStackTrace();
         }
     }

@@ -3,10 +3,10 @@ package edu.stevens.circuit.simulator;
 /**
  * Exception to indicate that a signal cound not be formed from a textual input.
  */
-public class MalformedSignal extends Exception {
-    private char bad;
+public class MalformedSignalException extends Exception {
+    private final char bad;
 
-    public MalformedSignal(char bad) {
+    public MalformedSignalException(final char bad) {
         this.bad = bad;
     }
 
@@ -19,9 +19,5 @@ public class MalformedSignal extends Exception {
 
     public char getBad() {
         return bad;
-    }
-
-    public void setBad(char bad) {
-        this.bad = bad;
     }
 }

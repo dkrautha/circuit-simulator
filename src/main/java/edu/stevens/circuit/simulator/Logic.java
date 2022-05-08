@@ -22,10 +22,10 @@ public interface Logic {
      * 
      * @param inSignals
      * @throws InvalidLogicParametersException
-     * @throws MalformedSignal
+     * @throws MalformedSignalException
      */
     public void feedFromString(String inSignals)
-            throws InvalidLogicParametersException, MalformedSignal;
+            throws InvalidLogicParametersException, MalformedSignalException;
 
     /**
      * Lets all inner components perform their logic and generate outputs.
@@ -58,8 +58,8 @@ public interface Logic {
      * @param inputs
      * @return
      * @throws InvalidLogicParametersException
-     * @throws MalformedSignal
+     * @throws MalformedSignalException
      */
     public String inspectFromString(String inputs)
-            throws InvalidLogicParametersException, MalformedSignal;
+            throws InvalidLogicParametersException, MalformedSignalException;
 }

@@ -44,7 +44,7 @@ public abstract class Gate implements Logic {
 
     @Override
     public void feedFromString(String inSignals)
-            throws InvalidLogicParametersException, MalformedSignal {
+            throws InvalidLogicParametersException, MalformedSignalException {
         List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
@@ -58,7 +58,7 @@ public abstract class Gate implements Logic {
 
     @Override
     public String inspectFromString(String inputs)
-            throws InvalidLogicParametersException, MalformedSignal {
+            throws InvalidLogicParametersException, MalformedSignalException {
         feedFromString(inputs);
         propagate();
         return read().toString();

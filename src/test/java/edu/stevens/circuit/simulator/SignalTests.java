@@ -32,70 +32,63 @@ public class SignalTests {
 
   @Test
   public void signal1() {
-    assertEquals(Signal.HI, Signal.HI);
-    assertEquals(Signal.LO, Signal.LO);
-    assertEquals(Signal.X, Signal.X);
-  }
-
-  @Test
-  public void signal2() {
     assertEquals("1", Signal.HI.toString());
   }
 
   @Test
-  public void signal3() {
+  public void signal2() {
     assertEquals("0", Signal.LO.toString());
   }
 
   @Test
-  public void signal4() {
+  public void signal3() {
     assertEquals("X", Signal.X.toString());
   }
 
   @Test
-  public void signal5() throws MalformedSignal {
+  public void signal4() throws MalformedSignalException {
     assertEquals(Signal.HI, Signal.fromChar('1'));
   }
 
   @Test
-  public void signal6() throws MalformedSignal {
+  public void signal5() throws MalformedSignalException {
     assertEquals(Signal.LO, Signal.fromChar('0'));
   }
 
   @Test
-  public void signal7() throws MalformedSignal {
+  public void signal6() throws MalformedSignalException {
     assertEquals(Signal.X, Signal.fromChar('X'));
   }
 
   @Test
-  public void signal8() throws MalformedSignal {
+  public void signal7() throws MalformedSignalException {
     assertEquals(Signal.X, Signal.fromChar('x'));
+  }
+
+  @Test
+  public void signal8() {
+    try {
+      char c = ' ';
+      Signal s = Signal.fromChar(c);
+      fail(String.format("shouldn't have gotten back Signal %s from char'%s'.", s, c));
+    } catch (MalformedSignalException e) {
+      return;
+    }
   }
 
   @Test
   public void signal9() {
     try {
-      char c = ' ';
-      Signal s = Signal.fromChar(c);
-      fail(String.format("shouldn't have gotten back Signal %s from char'%s'.", s, c));
-    } catch (MalformedSignal e) {
-      return;
-    }
-  }
-
-  @Test
-  public void signal10() {
-    try {
       char c = 'h';
       Signal s = Signal.fromChar(c);
       fail(String.format("shouldn't have gotten back Signal %s from char'%s'.", s, c));
-    } catch (MalformedSignal e) {
+    } catch (MalformedSignalException e) {
       return;
     }
   }
 
   @Test
-  public void signal11() throws MalformedSignal {
+  public void signal10() throws MalformedSignalException {
     String inp = "110X";
     List<Signal> actuals = Signal.fromString(inp);
     List<Signal> expecteds =
@@ -104,7 +97,7 @@ public class SignalTests {
   }
 
   @Test
-  public void signal12() throws MalformedSignal {
+  public void signal11() throws MalformedSignalException {
     String inp = "";
     List<Signal> expecteds = Arrays.asList(new Signal[] {});
     List<Signal> actuals = Signal.fromString(inp);
@@ -112,7 +105,7 @@ public class SignalTests {
   }
 
   @Test
-  public void signal13() throws MalformedSignal {
+  public void signal12() throws MalformedSignalException {
     String inp = "1 x \tX 00";
     List<Signal> expecteds =
         Arrays.asList(new Signal[] {Signal.HI, Signal.X, Signal.X, Signal.LO, Signal.LO});
@@ -121,32 +114,32 @@ public class SignalTests {
   }
 
   @Test
-  public void signal14() {
+  public void signal13() {
     try {
       String inp = "1 x \tX BAD characters ! 00";
       @SuppressWarnings("unused")
       List<Signal> expecteds = Signal.fromString(inp);
       fail("shouldn't have succeeded in reading past any bad characters.");
-    } catch (MalformedSignal e) {
+    } catch (MalformedSignalException e) {
       return;
     }
   }
 
   @Test
-  public void signal15() {
+  public void signal14() {
     List<Signal> originals = sigs0;
     assertEquals("0", Signal.toString(originals));
   }
 
   @Test
-  public void signal16() {
+  public void signal15() {
     List<Signal> originals =
         Arrays.asList(new Signal[] {Signal.LO, Signal.HI, Signal.X, Signal.HI});
     assertEquals("01X1", Signal.toString(originals));
   }
 
   @Test
-  public void signal17() {
+  public void signal16() {
     List<Signal> originals = Arrays.asList(new Signal[] {Signal.LO, Signal.HI, Signal.X, Signal.HI,
         Signal.LO, Signal.HI, Signal.X, Signal.HI});
     assertEquals("01X101X1", Signal.toString(originals));
