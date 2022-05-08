@@ -28,7 +28,8 @@ public class Circuit implements Logic {
         this.importables = importables;
     }
 
-    public Circuit(String circuitName) throws IOException, InvalidLogicParametersException {
+    public Circuit(String circuitName)
+            throws IOException, InvalidLogicParametersException, FeedbackCircuitDetectedException {
         this.components = new ArrayList<>();
         this.inputs = new ArrayList<>();
         this.outputs = new ArrayList<>();
@@ -40,21 +41,18 @@ public class Circuit implements Logic {
         boolean contactParsedYet = false;
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (line.isBlank()) {
-                continue;
-            }
-            if (!contactParsedYet) {
-                if (line.contains("IMPORT")) {
-                    parseImportLine(line);
-                    continue;
+            if (!line.isBlank()) {
+                if (!contactParsedYet) {
+                    if (line.contains("IMPORT")) {
+                        parseImportLine(line);
+                    } else {
+                        parseContactsLine(line);
+                        contactParsedYet = true;
+                    }
+                } else {
+                    parseComponentLine(line);
                 }
-
-                parseContactsLine(line);
-                contactParsedYet = true;
-                continue;
             }
-
-            parseComponentLine(line);
         }
     }
 
@@ -65,9 +63,7 @@ public class Circuit implements Logic {
 
     public void parseImportLine(String line) {
         String[] split = line.split("\\s+");
-        for (int i = 1; i < split.length; i += 1) {
-            importables.add(split[i]);
-        }
+        importables.addAll(Arrays.asList(Arrays.copyOfRange(split, 1, split.length)));
     }
 
     public void parseContactsLine(String line) {
@@ -87,11 +83,10 @@ public class Circuit implements Logic {
             if (isInput) {
                 c = new Contact(wOuter, wInner, true);
                 inputs.add(c);
-                continue;
+            } else {
+                c = new Contact(wInner, wOuter, false);
+                outputs.add(c);
             }
-
-            c = new Contact(wInner, wOuter, false);
-            outputs.add(c);
         }
     }
 
@@ -104,7 +99,8 @@ public class Circuit implements Logic {
         return Optional.empty();
     }
 
-    public void hookUp(List<Wire> inWires, List<Wire> outWires) throws InvalidLogicParametersException {
+    public void hookUp(List<Wire> inWires, List<Wire> outWires)
+            throws InvalidLogicParametersException {
         if (inWires.size() != inputs.size()) {
             throw new InvalidLogicParametersException(true, inputs.size(), inWires.size());
         }
@@ -131,7 +127,8 @@ public class Circuit implements Logic {
         }
     }
 
-    private void parseNot(List<String> split) throws InvalidLogicParametersException {
+    private void parseNot(List<String> split)
+            throws InvalidLogicParametersException, FeedbackCircuitDetectedException {
         if (split.size() != 4) {
             int arrowIndex = split.indexOf("->");
             if (arrowIndex != 2) {
@@ -142,7 +139,7 @@ public class Circuit implements Logic {
 
         String inputWireName = split.get(1);
         String outputWireName = split.get(3);
-        Wire input = findWire(inputWireName).get();
+        Wire input = findWire(inputWireName).orElseThrow(FeedbackCircuitDetectedException::new);
         Wire output;
 
         Optional<Wire> outputOptional = findWire(outputWireName);
@@ -156,7 +153,8 @@ public class Circuit implements Logic {
         components.add(new GateNot(input, output));
     }
 
-    private void parseGate(List<String> split, int gateIndex) throws InvalidLogicParametersException {
+    private void parseGate(List<String> split, int gateIndex)
+            throws InvalidLogicParametersException {
         int arrowIndex = split.indexOf("->");
         if (arrowIndex != split.size() - 2) {
             throw new InvalidLogicParametersException(false, 1, arrowIndex);
@@ -195,10 +193,12 @@ public class Circuit implements Logic {
             case 4:
                 components.add(new GateNor(ins, output));
                 break;
+            default:
         }
     }
 
-    public void parseComponentLine(String line) throws IOException, InvalidLogicParametersException {
+    public void parseComponentLine(String line)
+            throws IOException, InvalidLogicParametersException, FeedbackCircuitDetectedException {
         List<String> split = Arrays.asList(line.split("\\s+"));
         String componentType = split.get(0);
         // unique case for NOT
@@ -258,7 +258,8 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public void feedFromString(String inSignals) throws InvalidLogicParametersException, MalformedSignal {
+    public void feedFromString(String inSignals)
+            throws InvalidLogicParametersException, MalformedSignalException {
         List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
@@ -294,7 +295,8 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public String inspectFromString(String inputs) throws InvalidLogicParametersException, MalformedSignal {
+    public String inspectFromString(String inputs)
+            throws InvalidLogicParametersException, MalformedSignalException {
         List<Signal> i = Signal.fromString(inputs);
         return Signal.toString(inspect(i));
     }

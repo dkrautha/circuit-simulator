@@ -16,21 +16,18 @@ public class FeedbackCircuit extends Circuit {
         boolean contactParsedYet = false;
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (line.isBlank()) {
-                continue;
-            }
-            if (!contactParsedYet) {
-                if (line.contains("IMPORT")) {
-                    parseImportLine(line);
-                    continue;
+            if (!line.isBlank()) {
+                if (!contactParsedYet) {
+                    if (line.contains("IMPORT")) {
+                        parseImportLine(line);
+                    } else {
+                        parseContactsLine(line);
+                        contactParsedYet = true;
+                    }
+                } else {
+                    parseComponentLine(line);
                 }
-
-                parseContactsLine(line);
-                contactParsedYet = true;
-                continue;
             }
-
-            parseComponentLine(line);
         }
     }
 
@@ -67,7 +64,8 @@ public class FeedbackCircuit extends Circuit {
         getComponents().add(new GateNot(input, output));
     }
 
-    private void parseGate(List<String> split, int gateIndex) throws InvalidLogicParametersException {
+    private void parseGate(List<String> split, int gateIndex)
+            throws InvalidLogicParametersException {
         int arrowIndex = split.indexOf("->");
         if (arrowIndex != split.size() - 2) {
             throw new InvalidLogicParametersException(false, 1, arrowIndex);
@@ -114,11 +112,13 @@ public class FeedbackCircuit extends Circuit {
             case 4:
                 components.add(new GateNor(inputs, output));
                 break;
+            default:
         }
     }
 
     @Override
-    public void parseComponentLine(String line) throws InvalidLogicParametersException, IOException {
+    public void parseComponentLine(String line)
+            throws InvalidLogicParametersException, IOException {
         List<String> split = Arrays.asList(line.split("\\s+"));
         String componentType = split.get(0);
         // unique case for NOT
@@ -136,7 +136,12 @@ public class FeedbackCircuit extends Circuit {
         }
 
         // case for a sub-circuit
-        Circuit c = new Circuit(componentType);
+        Circuit c;
+        try {
+            c = new Circuit(componentType);
+        } catch (FeedbackCircuitDetectedException e) {
+            c = new FeedbackCircuit(componentType);
+        }
         List<Wire> inWires = new ArrayList<>();
         List<Wire> outWires = new ArrayList<>();
         int arrowIndex = split.indexOf("->");
