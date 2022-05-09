@@ -14,7 +14,7 @@ public enum Signal {
 
     private final char type;
 
-    Signal(char c) {
+    Signal(final char c) {
         this.type = c;
     }
 
@@ -28,7 +28,7 @@ public enum Signal {
         return X;
     }
 
-    public static Signal fromChar(char c) throws MalformedSignalException {
+    public static Signal fromChar(final char c) throws MalformedSignalException {
         if (c == '1') {
             return HI;
         }
@@ -41,10 +41,10 @@ public enum Signal {
         throw new MalformedSignalException(c);
     }
 
-    public static List<Signal> fromString(String inputs) throws MalformedSignalException {
-        List<Signal> list = new ArrayList<>();
+    public static List<Signal> fromString(final String inputs) throws MalformedSignalException {
+        final List<Signal> list = new ArrayList<>();
 
-        for (char c : inputs.toCharArray()) {
+        for (final char c : inputs.toCharArray()) {
             if (!"01xX \t".contains(Character.toString(c))) {
                 throw new MalformedSignalException(c);
             }
@@ -70,9 +70,9 @@ public enum Signal {
         return Character.toString(type);
     }
 
-    public static String toString(List<Signal> sig) {
-        StringBuilder b = new StringBuilder();
-        for (Signal s : sig) {
+    public static String toString(final List<Signal> sig) {
+        final StringBuilder b = new StringBuilder();
+        for (final Signal s : sig) {
             b.append(s.toString());
         }
 

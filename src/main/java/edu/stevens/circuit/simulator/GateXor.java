@@ -3,19 +3,19 @@ package edu.stevens.circuit.simulator;
 import java.util.List;
 
 public class GateXor extends Gate {
-    public GateXor(List<Wire> ins, Wire out) throws InvalidLogicParametersException {
+    public GateXor(final List<Wire> ins, final Wire out) throws InvalidLogicParametersException {
         super("XOR", ins, out);
     }
 
     @Override
     public boolean propagate() {
-        Wire outWire = getOutput();
-        Signal oldSignal = outWire.getSignal();
+        final Wire outWire = getOutput();
+        final Signal oldSignal = outWire.getSignal();
         Signal newSignal = Signal.LO;
         int hiCount = 0;
 
-        for (Wire w : getInputs()) {
-            Signal currentSignal = w.getSignal();
+        for (final Wire w : getInputs()) {
+            final Signal currentSignal = w.getSignal();
             if (currentSignal.equals(Signal.X)) {
                 newSignal = Signal.X;
                 break;

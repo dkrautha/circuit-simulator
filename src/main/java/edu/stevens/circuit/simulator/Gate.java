@@ -3,6 +3,7 @@ package edu.stevens.circuit.simulator;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The smallest unit of logic.
@@ -16,7 +17,8 @@ public abstract class Gate implements Logic {
     private Wire output;
     private String name;
 
-    protected Gate(String name, List<Wire> ins, Wire out) throws InvalidLogicParametersException {
+    protected Gate(final String name, final List<Wire> ins, final Wire out)
+            throws InvalidLogicParametersException {
         if (ins.isEmpty()) {
             throw new InvalidLogicParametersException(true, 1, ins.size());
         }
@@ -27,37 +29,37 @@ public abstract class Gate implements Logic {
     }
 
     @Override
-    public void feed(List<Signal> inSignals) throws InvalidLogicParametersException {
+    public void feed(final List<Signal> inSignals) throws InvalidLogicParametersException {
         if (inSignals.size() != inputs.size()) {
             throw new InvalidLogicParametersException(true, inputs.size(), inSignals.size());
         }
 
-        Iterator<Signal> sigIter = inSignals.iterator();
-        Iterator<Wire> wiresIter = inputs.iterator();
+        final Iterator<Signal> sigIter = inSignals.iterator();
+        final Iterator<Wire> wiresIter = inputs.iterator();
 
         while (sigIter.hasNext() && wiresIter.hasNext()) {
-            Signal s = sigIter.next();
-            Wire w = wiresIter.next();
+            final Signal s = sigIter.next();
+            final Wire w = wiresIter.next();
             w.setSignal(s);
         }
     }
 
     @Override
-    public void feedFromString(String inSignals)
+    public void feedFromString(final String inSignals)
             throws InvalidLogicParametersException, MalformedSignalException {
-        List<Signal> signals = Signal.fromString(inSignals);
+        final List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
 
     @Override
-    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParametersException {
+    public List<Signal> inspect(final List<Signal> inputs) throws InvalidLogicParametersException {
         feed(inputs);
         propagate();
         return read();
     }
 
     @Override
-    public String inspectFromString(String inputs)
+    public String inspectFromString(final String inputs)
             throws InvalidLogicParametersException, MalformedSignalException {
         feedFromString(inputs);
         propagate();
@@ -76,46 +78,27 @@ public abstract class Gate implements Logic {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((inputs == null) ? 0 : inputs.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((output == null) ? 0 : output.hashCode());
-        return result;
+        return Objects.hash(inputs, name, output);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (!(obj instanceof Gate)) {
             return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Gate other = (Gate) obj;
-        if (inputs == null) {
-            if (other.inputs != null)
-                return false;
-        } else if (!inputs.equals(other.inputs))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (output == null) {
-            if (other.output != null)
-                return false;
-        } else if (!output.equals(other.output))
-            return false;
-        return true;
+        }
+        final Gate other = (Gate) obj;
+        return Objects.equals(inputs, other.inputs) && Objects.equals(name, other.name)
+                && Objects.equals(output, other.output);
     }
 
     public List<Wire> getInputs() {
         return inputs;
     }
 
-    public void setInputs(List<Wire> inputs) {
+    public void setInputs(final List<Wire> inputs) {
         this.inputs = inputs;
     }
 
@@ -123,7 +106,7 @@ public abstract class Gate implements Logic {
         return output;
     }
 
-    public void setOutput(Wire output) {
+    public void setOutput(final Wire output) {
         this.output = output;
     }
 
@@ -131,7 +114,7 @@ public abstract class Gate implements Logic {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 }

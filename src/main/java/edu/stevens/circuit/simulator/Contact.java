@@ -9,14 +9,14 @@ public class Contact implements Logic {
     private Wire out;
     private boolean inbound;
 
-    public Contact(Wire in, Wire out, boolean inbound) {
+    public Contact(final Wire in, final Wire out, final boolean inbound) {
         this.in = in;
         this.out = out;
         this.inbound = inbound;
     }
 
     @Override
-    public void feed(List<Signal> inSignals) throws InvalidLogicParametersException {
+    public void feed(final List<Signal> inSignals) throws InvalidLogicParametersException {
         if (inSignals.size() != 1) {
             throw new InvalidLogicParametersException(true, 1, inSignals.size());
         }
@@ -25,16 +25,16 @@ public class Contact implements Logic {
     }
 
     @Override
-    public void feedFromString(String inSignals)
+    public void feedFromString(final String inSignals)
             throws InvalidLogicParametersException, MalformedSignalException {
-        List<Signal> signals = Signal.fromString(inSignals);
+        final List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
 
     @Override
     public boolean propagate() {
-        Signal oldSignal = out.getSignal();
-        Signal newSignal = in.getSignal();
+        final Signal oldSignal = out.getSignal();
+        final Signal newSignal = in.getSignal();
 
         if (oldSignal.equals(newSignal)) {
             return false;
@@ -50,14 +50,14 @@ public class Contact implements Logic {
     }
 
     @Override
-    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParametersException {
+    public List<Signal> inspect(final List<Signal> inputs) throws InvalidLogicParametersException {
         feed(inputs);
         propagate();
         return read();
     }
 
     @Override
-    public String inspectFromString(String inputs)
+    public String inspectFromString(final String inputs)
             throws InvalidLogicParametersException, MalformedSignalException {
         feedFromString(inputs);
         propagate();
@@ -76,28 +76,20 @@ public class Contact implements Logic {
         return String.format("(%s)%s", in.getName(), out);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         return Objects.hash(in, inbound, out);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
-        if (!(obj instanceof Contact))
+        }
+        if (!(obj instanceof Contact)) {
             return false;
-        Contact other = (Contact) obj;
+        }
+        final Contact other = (Contact) obj;
         return Objects.equals(in, other.in) && inbound == other.inbound
                 && Objects.equals(out, other.out);
     }
@@ -106,7 +98,7 @@ public class Contact implements Logic {
         return in;
     }
 
-    public void setIn(Wire in) {
+    public void setIn(final Wire in) {
         this.in = in;
     }
 
@@ -114,7 +106,7 @@ public class Contact implements Logic {
         return out;
     }
 
-    public void setOut(Wire out) {
+    public void setOut(final Wire out) {
         this.out = out;
     }
 
@@ -122,7 +114,7 @@ public class Contact implements Logic {
         return inbound;
     }
 
-    public void setInbound(boolean inbound) {
+    public void setInbound(final boolean inbound) {
         this.inbound = inbound;
     }
 }

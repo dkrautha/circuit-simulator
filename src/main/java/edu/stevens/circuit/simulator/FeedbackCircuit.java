@@ -8,14 +8,15 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class FeedbackCircuit extends Circuit {
-    public FeedbackCircuit(String circuitName) throws IOException, InvalidLogicParametersException {
+    public FeedbackCircuit(final String circuitName)
+            throws IOException, InvalidLogicParametersException {
         super(circuitName, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
                 new ArrayList<>(), new ArrayList<>());
 
-        Scanner scanner = getCircuitScanner(circuitName);
+        final Scanner scanner = getCircuitScanner(circuitName);
         boolean contactParsedYet = false;
         while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
+            final String line = scanner.nextLine();
             if (!line.isBlank()) {
                 if (!contactParsedYet) {
                     if (line.contains("IMPORT")) {
@@ -31,20 +32,20 @@ public class FeedbackCircuit extends Circuit {
         }
     }
 
-    private void parseNot(List<String> split) throws InvalidLogicParametersException {
+    private void parseNot(final List<String> split) throws InvalidLogicParametersException {
         if (split.size() != 4) {
-            int arrowIndex = split.indexOf("->");
+            final int arrowIndex = split.indexOf("->");
             if (arrowIndex != 2) {
                 throw new InvalidLogicParametersException(true, 1, arrowIndex - 1);
             }
             throw new InvalidLogicParametersException(false, 1, split.size() - arrowIndex - 1);
         }
 
-        String inputWireName = split.get(1);
-        String outputWireName = split.get(3);
+        final String inputWireName = split.get(1);
+        final String outputWireName = split.get(3);
 
         Wire input;
-        Optional<Wire> inputOptional = findWire(inputWireName);
+        final Optional<Wire> inputOptional = findWire(inputWireName);
         if (inputOptional.isEmpty()) {
             input = new Wire(inputWireName);
             getInnerWires().add(input);
@@ -53,7 +54,7 @@ public class FeedbackCircuit extends Circuit {
         }
 
         Wire output;
-        Optional<Wire> outputOptional = findWire(outputWireName);
+        final Optional<Wire> outputOptional = findWire(outputWireName);
         if (outputOptional.isEmpty()) {
             output = new Wire(outputWireName);
             getInnerWires().add(output);
@@ -64,18 +65,18 @@ public class FeedbackCircuit extends Circuit {
         getComponents().add(new GateNot(input, output));
     }
 
-    private void parseGate(List<String> split, int gateIndex)
+    private void parseGate(final List<String> split, final int gateIndex)
             throws InvalidLogicParametersException {
-        int arrowIndex = split.indexOf("->");
+        final int arrowIndex = split.indexOf("->");
         if (arrowIndex != split.size() - 2) {
             throw new InvalidLogicParametersException(false, 1, arrowIndex);
         }
 
-        List<Wire> inputs = new ArrayList<>();
+        final List<Wire> inputs = new ArrayList<>();
         for (int i = 1; i < arrowIndex; i += 1) {
-            String inputName = split.get(i);
+            final String inputName = split.get(i);
             Wire input;
-            Optional<Wire> inputOptional = findWire(inputName);
+            final Optional<Wire> inputOptional = findWire(inputName);
             if (inputOptional.isEmpty()) {
                 input = new Wire(inputName);
                 getInnerWires().add(input);
@@ -85,8 +86,8 @@ public class FeedbackCircuit extends Circuit {
             inputs.add(input);
         }
 
-        String outputName = split.get(split.size() - 1);
-        Optional<Wire> outputOptional = findWire(outputName);
+        final String outputName = split.get(split.size() - 1);
+        final Optional<Wire> outputOptional = findWire(outputName);
         Wire output;
         if (outputOptional.isEmpty()) {
             output = new Wire(outputName);
@@ -95,7 +96,7 @@ public class FeedbackCircuit extends Circuit {
             output = outputOptional.get();
         }
 
-        List<Logic> components = getComponents();
+        final List<Logic> components = getComponents();
         switch (gateIndex) {
             case 0:
                 components.add(new GateAnd(inputs, output));
@@ -117,10 +118,10 @@ public class FeedbackCircuit extends Circuit {
     }
 
     @Override
-    public void parseComponentLine(String line)
+    public void parseComponentLine(final String line)
             throws InvalidLogicParametersException, IOException {
-        List<String> split = Arrays.asList(line.split("\\s+"));
-        String componentType = split.get(0);
+        final List<String> split = Arrays.asList(line.split("\\s+"));
+        final String componentType = split.get(0);
         // unique case for NOT
         if (componentType.equals("NOT")) {
             parseNot(split);
@@ -128,8 +129,8 @@ public class FeedbackCircuit extends Circuit {
         }
 
         // case for other gates
-        List<String> otherGates = Arrays.asList("AND", "OR", "XOR", "NAND", "NOR");
-        int gateIndex = otherGates.indexOf(componentType);
+        final List<String> otherGates = Arrays.asList("AND", "OR", "XOR", "NAND", "NOR");
+        final int gateIndex = otherGates.indexOf(componentType);
         if (gateIndex >= 0) {
             parseGate(split, gateIndex);
             return;
@@ -139,22 +140,22 @@ public class FeedbackCircuit extends Circuit {
         Circuit c;
         try {
             c = new Circuit(componentType);
-        } catch (FeedbackCircuitDetectedException e) {
+        } catch (final FeedbackCircuitDetectedException e) {
             c = new FeedbackCircuit(componentType);
         }
-        List<Wire> inWires = new ArrayList<>();
-        List<Wire> outWires = new ArrayList<>();
-        int arrowIndex = split.indexOf("->");
+        final List<Wire> inWires = new ArrayList<>();
+        final List<Wire> outWires = new ArrayList<>();
+        final int arrowIndex = split.indexOf("->");
         for (int i = 1; i < arrowIndex; i += 1) {
-            String inputName = split.get(i);
-            Wire w = findWire(inputName).get();
+            final String inputName = split.get(i);
+            final Wire w = findWire(inputName).get();
             inWires.add(w);
         }
         for (int i = arrowIndex + 1; i < split.size(); i += 1) {
-            String outputName = split.get(i);
-            Optional<Wire> w = findWire(outputName);
+            final String outputName = split.get(i);
+            final Optional<Wire> w = findWire(outputName);
             if (w.isEmpty()) {
-                Wire output = new Wire(outputName);
+                final Wire output = new Wire(outputName);
                 outWires.add(output);
                 getInnerWires().add(output);
             } else {
@@ -168,16 +169,16 @@ public class FeedbackCircuit extends Circuit {
     @Override
     public boolean propagate() {
         boolean changed = false;
-        for (Contact c : getInputs()) {
-            boolean result = c.propagate();
+        for (final Contact c : getInputs()) {
+            final boolean result = c.propagate();
             changed |= result;
         }
-        for (Logic l : getComponents()) {
-            boolean result = l.propagate();
+        for (final Logic l : getComponents()) {
+            final boolean result = l.propagate();
             changed |= result;
         }
-        for (Contact c : getOutputs()) {
-            boolean result = c.propagate();
+        for (final Contact c : getOutputs()) {
+            final boolean result = c.propagate();
             changed |= result;
         }
 

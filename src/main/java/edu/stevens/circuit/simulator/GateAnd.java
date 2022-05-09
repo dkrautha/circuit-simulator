@@ -3,18 +3,18 @@ package edu.stevens.circuit.simulator;
 import java.util.List;
 
 public class GateAnd extends Gate {
-    public GateAnd(List<Wire> ins, Wire out) throws InvalidLogicParametersException {
+    public GateAnd(final List<Wire> ins, final Wire out) throws InvalidLogicParametersException {
         super("AND", ins, out);
     }
 
     @Override
     public boolean propagate() {
-        Wire outWire = getOutput();
-        Signal oldSignal = outWire.getSignal();
+        final Wire outWire = getOutput();
+        final Signal oldSignal = outWire.getSignal();
         Signal newSignal = Signal.HI;
 
-        for (Wire w : getInputs()) {
-            Signal currentSignal = w.getSignal();
+        for (final Wire w : getInputs()) {
+            final Signal currentSignal = w.getSignal();
             if (currentSignal.equals(Signal.LO)) {
                 newSignal = Signal.LO;
                 break;

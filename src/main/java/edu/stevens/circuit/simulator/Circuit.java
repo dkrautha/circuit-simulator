@@ -18,8 +18,9 @@ public class Circuit implements Logic {
     private List<String> importables;
     private String name;
 
-    public Circuit(String circuitName, List<Logic> components, List<Contact> inputs,
-            List<Contact> outputs, List<Wire> innerWires, List<String> importables) {
+    public Circuit(final String circuitName, final List<Logic> components,
+            final List<Contact> inputs, final List<Contact> outputs, final List<Wire> innerWires,
+            final List<String> importables) {
         this.name = circuitName;
         this.components = components;
         this.inputs = inputs;
@@ -28,7 +29,7 @@ public class Circuit implements Logic {
         this.importables = importables;
     }
 
-    public Circuit(String circuitName)
+    public Circuit(final String circuitName)
             throws IOException, InvalidLogicParametersException, FeedbackCircuitDetectedException {
         this.components = new ArrayList<>();
         this.inputs = new ArrayList<>();
@@ -37,10 +38,10 @@ public class Circuit implements Logic {
         this.importables = new ArrayList<>();
         this.name = circuitName;
 
-        Scanner scanner = getCircuitScanner(circuitName);
+        final Scanner scanner = getCircuitScanner(circuitName);
         boolean contactParsedYet = false;
         while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
+            final String line = scanner.nextLine();
             if (!line.isBlank()) {
                 if (!contactParsedYet) {
                     if (line.contains("IMPORT")) {
@@ -56,27 +57,27 @@ public class Circuit implements Logic {
         }
     }
 
-    public Scanner getCircuitScanner(String circuitName) throws IOException {
-        String path = "saved_circuits/" + circuitName + ".txt";
+    public Scanner getCircuitScanner(final String circuitName) throws IOException {
+        final String path = "saved_circuits/" + circuitName + ".txt";
         return new Scanner(Path.of(path));
     }
 
-    public void parseImportLine(String line) {
-        String[] split = line.split("\\s+");
+    public void parseImportLine(final String line) {
+        final String[] split = line.split("\\s+");
         importables.addAll(Arrays.asList(Arrays.copyOfRange(split, 1, split.length)));
     }
 
-    public void parseContactsLine(String line) {
-        String[] split = line.split("\\s+");
+    public void parseContactsLine(final String line) {
+        final String[] split = line.split("\\s+");
         boolean isInput = true;
-        for (String s : split) {
+        for (final String s : split) {
             if (s.equals("->")) {
                 isInput = false;
                 continue;
             }
 
-            Wire wInner = new Wire(s);
-            Wire wOuter = new Wire(s);
+            final Wire wInner = new Wire(s);
+            final Wire wOuter = new Wire(s);
             innerWires.add(wInner);
 
             Contact c;
@@ -90,8 +91,8 @@ public class Circuit implements Logic {
         }
     }
 
-    public Optional<Wire> findWire(String name) {
-        for (Wire w : innerWires) {
+    public Optional<Wire> findWire(final String name) {
+        for (final Wire w : innerWires) {
             if (w.getName().equals(name)) {
                 return Optional.ofNullable(w);
             }
@@ -99,7 +100,7 @@ public class Circuit implements Logic {
         return Optional.empty();
     }
 
-    public void hookUp(List<Wire> inWires, List<Wire> outWires)
+    public void hookUp(final List<Wire> inWires, final List<Wire> outWires)
             throws InvalidLogicParametersException {
         if (inWires.size() != inputs.size()) {
             throw new InvalidLogicParametersException(true, inputs.size(), inWires.size());
@@ -108,41 +109,42 @@ public class Circuit implements Logic {
             throw new InvalidLogicParametersException(false, inputs.size(), outWires.size());
         }
 
-        Iterator<Contact> inputsIter = inputs.iterator();
-        Iterator<Wire> inWiresIter = inWires.iterator();
+        final Iterator<Contact> inputsIter = inputs.iterator();
+        final Iterator<Wire> inWiresIter = inWires.iterator();
 
         while (inputsIter.hasNext() && inWiresIter.hasNext()) {
-            Contact c = inputsIter.next();
-            Wire w = inWiresIter.next();
+            final Contact c = inputsIter.next();
+            final Wire w = inWiresIter.next();
             c.setIn(w);
         }
 
-        Iterator<Contact> outputsIter = outputs.iterator();
-        Iterator<Wire> outWiresIter = outWires.iterator();
+        final Iterator<Contact> outputsIter = outputs.iterator();
+        final Iterator<Wire> outWiresIter = outWires.iterator();
 
         while (outputsIter.hasNext() && outWiresIter.hasNext()) {
-            Contact c = outputsIter.next();
-            Wire w = outWiresIter.next();
+            final Contact c = outputsIter.next();
+            final Wire w = outWiresIter.next();
             c.setOut(w);
         }
     }
 
-    private void parseNot(List<String> split)
+    private void parseNot(final List<String> split)
             throws InvalidLogicParametersException, FeedbackCircuitDetectedException {
         if (split.size() != 4) {
-            int arrowIndex = split.indexOf("->");
+            final int arrowIndex = split.indexOf("->");
             if (arrowIndex != 2) {
                 throw new InvalidLogicParametersException(true, 1, arrowIndex - 1);
             }
             throw new InvalidLogicParametersException(false, 1, split.size() - arrowIndex - 1);
         }
 
-        String inputWireName = split.get(1);
-        String outputWireName = split.get(3);
-        Wire input = findWire(inputWireName).orElseThrow(FeedbackCircuitDetectedException::new);
+        final String inputWireName = split.get(1);
+        final String outputWireName = split.get(3);
+        final Wire input =
+                findWire(inputWireName).orElseThrow(FeedbackCircuitDetectedException::new);
         Wire output;
 
-        Optional<Wire> outputOptional = findWire(outputWireName);
+        final Optional<Wire> outputOptional = findWire(outputWireName);
         if (outputOptional.isEmpty()) {
             output = new Wire(outputWireName);
             innerWires.add(output);
@@ -153,22 +155,22 @@ public class Circuit implements Logic {
         components.add(new GateNot(input, output));
     }
 
-    private void parseGate(List<String> split, int gateIndex)
+    private void parseGate(final List<String> split, final int gateIndex)
             throws InvalidLogicParametersException {
-        int arrowIndex = split.indexOf("->");
+        final int arrowIndex = split.indexOf("->");
         if (arrowIndex != split.size() - 2) {
             throw new InvalidLogicParametersException(false, 1, arrowIndex);
         }
 
-        List<Wire> ins = new ArrayList<>();
+        final List<Wire> ins = new ArrayList<>();
         for (int i = 1; i < arrowIndex; i += 1) {
-            String inputName = split.get(i);
-            Wire w = findWire(inputName).get();
+            final String inputName = split.get(i);
+            final Wire w = findWire(inputName).get();
             ins.add(w);
         }
 
-        String outputName = split.get(split.size() - 1);
-        Optional<Wire> outputOptional = findWire(outputName);
+        final String outputName = split.get(split.size() - 1);
+        final Optional<Wire> outputOptional = findWire(outputName);
         Wire output;
         if (outputOptional.isEmpty()) {
             output = new Wire(outputName);
@@ -197,10 +199,10 @@ public class Circuit implements Logic {
         }
     }
 
-    public void parseComponentLine(String line)
+    public void parseComponentLine(final String line)
             throws IOException, InvalidLogicParametersException, FeedbackCircuitDetectedException {
-        List<String> split = Arrays.asList(line.split("\\s+"));
-        String componentType = split.get(0);
+        final List<String> split = Arrays.asList(line.split("\\s+"));
+        final String componentType = split.get(0);
         // unique case for NOT
         if (componentType.equals("NOT")) {
             parseNot(split);
@@ -208,28 +210,28 @@ public class Circuit implements Logic {
         }
 
         // case for other gates
-        List<String> otherGates = Arrays.asList("AND", "OR", "XOR", "NAND", "NOR");
-        int gateIndex = otherGates.indexOf(componentType);
+        final List<String> otherGates = Arrays.asList("AND", "OR", "XOR", "NAND", "NOR");
+        final int gateIndex = otherGates.indexOf(componentType);
         if (gateIndex >= 0) {
             parseGate(split, gateIndex);
             return;
         }
 
         // case for a sub-circuit
-        Circuit c = new Circuit(componentType);
-        List<Wire> inWires = new ArrayList<>();
-        List<Wire> outWires = new ArrayList<>();
-        int arrowIndex = split.indexOf("->");
+        final Circuit c = new Circuit(componentType);
+        final List<Wire> inWires = new ArrayList<>();
+        final List<Wire> outWires = new ArrayList<>();
+        final int arrowIndex = split.indexOf("->");
         for (int i = 1; i < arrowIndex; i += 1) {
-            String inputName = split.get(i);
-            Wire w = findWire(inputName).get();
+            final String inputName = split.get(i);
+            final Wire w = findWire(inputName).get();
             inWires.add(w);
         }
         for (int i = arrowIndex + 1; i < split.size(); i += 1) {
-            String outputName = split.get(i);
-            Optional<Wire> w = findWire(outputName);
+            final String outputName = split.get(i);
+            final Optional<Wire> w = findWire(outputName);
             if (w.isEmpty()) {
-                Wire output = new Wire(outputName);
+                final Wire output = new Wire(outputName);
                 outWires.add(output);
                 innerWires.add(output);
             } else {
@@ -241,42 +243,42 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public void feed(List<Signal> inSignals) throws InvalidLogicParametersException {
+    public void feed(final List<Signal> inSignals) throws InvalidLogicParametersException {
         if (inSignals.size() != inputs.size()) {
             throw new InvalidLogicParametersException(true, inputs.size(), inSignals.size());
         }
 
-        Iterator<Signal> signalsIter = inSignals.iterator();
-        Iterator<Contact> inputsIterator = inputs.iterator();
+        final Iterator<Signal> signalsIter = inSignals.iterator();
+        final Iterator<Contact> inputsIterator = inputs.iterator();
 
         while (signalsIter.hasNext() && inputsIterator.hasNext()) {
-            Signal s = signalsIter.next();
-            Contact c = inputsIterator.next();
+            final Signal s = signalsIter.next();
+            final Contact c = inputsIterator.next();
 
             c.getIn().setSignal(s);
         }
     }
 
     @Override
-    public void feedFromString(String inSignals)
+    public void feedFromString(final String inSignals)
             throws InvalidLogicParametersException, MalformedSignalException {
-        List<Signal> signals = Signal.fromString(inSignals);
+        final List<Signal> signals = Signal.fromString(inSignals);
         feed(signals);
     }
 
     @Override
     public boolean propagate() {
         boolean changed = false;
-        for (Contact c : inputs) {
-            boolean result = c.propagate();
+        for (final Contact c : inputs) {
+            final boolean result = c.propagate();
             changed |= result;
         }
-        for (Logic l : components) {
-            boolean result = l.propagate();
+        for (final Logic l : components) {
+            final boolean result = l.propagate();
             changed |= result;
         }
-        for (Contact c : outputs) {
-            boolean result = c.propagate();
+        for (final Contact c : outputs) {
+            final boolean result = c.propagate();
             changed |= result;
         }
         return changed;
@@ -288,33 +290,33 @@ public class Circuit implements Logic {
     }
 
     @Override
-    public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParametersException {
+    public List<Signal> inspect(final List<Signal> inputs) throws InvalidLogicParametersException {
         feed(inputs);
         propagate();
         return read();
     }
 
     @Override
-    public String inspectFromString(String inputs)
+    public String inspectFromString(final String inputs)
             throws InvalidLogicParametersException, MalformedSignalException {
-        List<Signal> i = Signal.fromString(inputs);
+        final List<Signal> i = Signal.fromString(inputs);
         return Signal.toString(inspect(i));
     }
 
-    public static String indent(String s) {
+    public static String indent(final String s) {
         return s.lines().map(line -> "  " + line + "\n").collect(Collectors.joining());
     }
 
     @Override
     public String toString() {
-        StringBuilder s = new StringBuilder();
+        final StringBuilder s = new StringBuilder();
         s.append(this.name);
         s.append(" : ");
         s.append(inputs.stream().map(i -> i.getIn().toString()).collect(Collectors.joining()));
         s.append(" -> ");
         s.append(outputs.stream().map(o -> o.getOut().toString()).collect(Collectors.joining()));
         s.append("\n");
-        for (Logic component : components) {
+        for (final Logic component : components) {
             s.append(indent(component.toString()));
         }
         return s.toString();
@@ -324,7 +326,7 @@ public class Circuit implements Logic {
         return components;
     }
 
-    public void setComponents(List<Logic> components) {
+    public void setComponents(final List<Logic> components) {
         this.components = components;
     }
 
@@ -332,7 +334,7 @@ public class Circuit implements Logic {
         return inputs;
     }
 
-    public void setInputs(List<Contact> inputs) {
+    public void setInputs(final List<Contact> inputs) {
         this.inputs = inputs;
     }
 
@@ -340,7 +342,7 @@ public class Circuit implements Logic {
         return outputs;
     }
 
-    public void setOutputs(List<Contact> outputs) {
+    public void setOutputs(final List<Contact> outputs) {
         this.outputs = outputs;
     }
 
@@ -348,7 +350,7 @@ public class Circuit implements Logic {
         return innerWires;
     }
 
-    public void setInnerWires(List<Wire> innerWires) {
+    public void setInnerWires(final List<Wire> innerWires) {
         this.innerWires = innerWires;
     }
 
@@ -356,7 +358,7 @@ public class Circuit implements Logic {
         return importables;
     }
 
-    public void setImportables(List<String> importables) {
+    public void setImportables(final List<String> importables) {
         this.importables = importables;
     }
 
@@ -364,7 +366,7 @@ public class Circuit implements Logic {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 }

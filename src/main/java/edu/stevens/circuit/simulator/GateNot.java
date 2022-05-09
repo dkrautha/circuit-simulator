@@ -3,15 +3,15 @@ package edu.stevens.circuit.simulator;
 import java.util.Arrays;
 
 public class GateNot extends Gate {
-    public GateNot(Wire input, Wire out) throws InvalidLogicParametersException {
+    public GateNot(final Wire input, final Wire out) throws InvalidLogicParametersException {
         super("NOT", Arrays.asList(input), out);
     }
 
     @Override
     public boolean propagate() {
-        Wire outWire = getOutput();
-        Signal oldSignal = outWire.getSignal();
-        Signal newSignal = getInputs().get(0).getSignal().invert();
+        final Wire outWire = getOutput();
+        final Signal oldSignal = outWire.getSignal();
+        final Signal newSignal = getInputs().get(0).getSignal().invert();
 
         if (oldSignal.equals(newSignal)) {
             return false;
