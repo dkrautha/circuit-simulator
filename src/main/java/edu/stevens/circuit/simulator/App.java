@@ -47,6 +47,7 @@ public class App {
     }
 
     public static void main(String[] args) {
+        // TODO: allow the user to pass in multiple sets of input signals
         if (args.length != 2) {
             System.out.println(
                     "This program takes two CLI arguments, the first specifies the circuit file to open and run, the second is a string of inputs.");

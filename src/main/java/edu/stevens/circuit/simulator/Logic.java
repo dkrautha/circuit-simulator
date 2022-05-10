@@ -46,6 +46,8 @@ public interface Logic {
         /**
          * Performs the combination of feeding, propagating, and reading.
          * 
+         * TODO turns out you can give default impls in interfaces, maybe add one here?
+         * 
          * @param inputs
          * @return Output wires values as a list, after logic have been performed.
          * @throws InvalidLogicParametersException
