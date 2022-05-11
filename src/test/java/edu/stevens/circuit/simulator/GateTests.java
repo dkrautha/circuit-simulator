@@ -215,6 +215,7 @@ public class GateTests {
     assertEquals(expected, g.getInputs());
   }
 
+  // TODO parameterize the next four tests
   @Test
   public void gateand_00() throws InvalidLogicParametersException, MalformedSignalException {
     GateAnd g = new GateAnd(wires2, new Wire("outa"));
@@ -763,4 +764,6 @@ public class GateTests {
     ans = g.propagate();
     assertTrue(ans);
   }
+
+  // TODO Add GateXnor tests below here
 }
