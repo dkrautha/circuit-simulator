@@ -156,7 +156,7 @@ public class Circuit implements Logic {
     }
 
     private void parseGate(final List<String> split, final int gateIndex)
-            throws InvalidLogicParametersException {
+            throws InvalidLogicParametersException, FeedbackCircuitDetectedException {
         final int arrowIndex = split.indexOf("->");
         if (arrowIndex != split.size() - 2) {
             throw new InvalidLogicParametersException(false, 1, arrowIndex);
@@ -165,7 +165,7 @@ public class Circuit implements Logic {
         final List<Wire> ins = new ArrayList<>();
         for (int i = 1; i < arrowIndex; i += 1) {
             final String inputName = split.get(i);
-            final Wire w = findWire(inputName).get();
+            final Wire w = findWire(inputName).orElseThrow(FeedbackCircuitDetectedException::new);
             ins.add(w);
         }
 
