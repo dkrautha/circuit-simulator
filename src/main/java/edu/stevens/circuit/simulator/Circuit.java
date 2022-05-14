@@ -195,6 +195,8 @@ public class Circuit implements Logic {
             case 4:
                 components.add(new GateNor(ins, output));
                 break;
+            case 5:
+                components.add(new GateXnor(ins, output));
             default:
         }
     }
@@ -210,7 +212,7 @@ public class Circuit implements Logic {
         }
 
         // case for other gates
-        final List<String> otherGates = Arrays.asList("AND", "OR", "XOR", "NAND", "NOR");
+        final List<String> otherGates = Arrays.asList("AND", "OR", "XOR", "NAND", "NOR", "XNOR");
         final int gateIndex = otherGates.indexOf(componentType);
         if (gateIndex >= 0) {
             parseGate(split, gateIndex);

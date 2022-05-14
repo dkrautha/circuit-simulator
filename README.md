@@ -48,6 +48,7 @@ Names of the built-in gates:
 - `NOR`
 - `NAND`
 - `XOR`
+- `XNOR`
 
 ## Project Goals
 
@@ -83,6 +84,7 @@ Classes:
   - GateXor
   - GateNand
   - GateNor
+  - GateXnor
 - Circuit
   - FeedbackCircuit
 

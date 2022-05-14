@@ -764,6 +764,106 @@ public class GateTests {
     ans = g.propagate();
     assertTrue(ans);
   }
+ // GateXnor tests
+  @Test
+  public void gatexnor_1() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires2, new Wire("outa"));
+    List<Wire> expected = Arrays.asList(new Wire[] {new Wire("a"), new Wire("b")});
+    assertEquals(expected, g.getInputs());
 
-  // TODO Add GateXnor tests below here
+    expected.get(0).setSignal(Signal.LO);
+    expected.get(1).setSignal(Signal.HI);
+
+    g.feedFromString("01");
+    assertEquals(expected, g.getInputs());
+  }
+
+  @Test
+  public void gatexnor_00() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires2, new Wire("outa"));
+    g.feedFromString("00");
+    g.propagate();
+    assertEquals(sigs0, g.read());
+  }
+
+  @Test
+  public void gatexnor_01() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires2, new Wire("outa"));
+    g.feedFromString("01");
+    g.propagate();
+    assertEquals(sigs0, g.read());
+  }
+
+  @Test
+  public void gatexnor_10() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires2, new Wire("outa"));
+    g.feedFromString("10");
+    g.propagate();
+    assertEquals(sigs0, g.read());
+  }
+
+  @Test
+  public void gatexnor_11() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires2, new Wire("outa"));
+    g.feedFromString("11");
+    g.propagate();
+    assertEquals(sigs1, g.read());
+  }
+
+  @Test
+  public void gatexnor_X0() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires2, new Wire("outa"));
+    g.feedFromString("X0");
+    g.propagate();
+    assertEquals(sigsX, g.read());
+  }
+
+  @Test
+  public void gatexnor_1X() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires2, new Wire("outa"));
+    g.feedFromString("1X");
+    g.propagate();
+    assertEquals(sigsX, g.read());
+  }
+
+  @Test
+  public void gatexnor_XX() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires2, new Wire("outa"));
+    g.feedFromString("XX");
+    g.propagate();
+    assertEquals(sigsX, g.read());
+  }
+
+  @Test
+  public void gatexnor_011() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires3, new Wire("outa"));
+    g.feedFromString("011");
+    g.propagate();
+    assertEquals(sigs1, g.read());
+  }
+
+  @Test
+  public void gatexnor_0010() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires4, new Wire("outa"));
+    g.feedFromString("0010");
+    g.propagate();
+    assertEquals(sigs0, g.read());
+  }
+
+  @Test
+  public void gatexnor_propagate_results() throws InvalidLogicParametersException, MalformedSignalException {
+    GateXnor g = new GateXnor(wires2, new Wire("outa"));
+    // output : X -> HI
+    g.feedFromString("00");
+    boolean ans = g.propagate();
+    assertFalse(ans);
+    // output: HI -> HI
+    ans = g.propagate();
+    assertTrue(ans);
+    // output: HI -> LO
+    g.feedFromString("10");
+    ans = g.propagate();
+    assertTrue(ans);
+  }
+
 }
