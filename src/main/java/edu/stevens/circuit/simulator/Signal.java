@@ -45,9 +45,6 @@ public enum Signal {
         final List<Signal> list = new ArrayList<>();
 
         for (final char c : inputs.toCharArray()) {
-            // TODO does this check need to include ' ' and '\t'?
-            // Assuming we are getting inputs from the user on the command line, then ' ' will never
-            // be in the string, and I can't imagine '\t' being there either?
             if (!"01xX \t".contains(Character.toString(c))) {
                 throw new MalformedSignalException(c);
             }
