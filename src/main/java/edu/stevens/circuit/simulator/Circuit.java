@@ -289,20 +289,6 @@ public class Circuit implements Logic {
         return outputs.stream().map(c -> c.getOut().getSignal()).toList();
     }
 
-    @Override
-    public List<Signal> inspect(final List<Signal> inputs) throws InvalidLogicParametersException {
-        feed(inputs);
-        propagate();
-        return read();
-    }
-
-    @Override
-    public String inspectFromString(final String inputs)
-            throws InvalidLogicParametersException, MalformedSignalException {
-        final List<Signal> i = Signal.fromString(inputs);
-        return Signal.toString(inspect(i));
-    }
-
     public static String indent(final String s) {
         return s.lines().map(line -> "  " + line + "\n").collect(Collectors.joining());
     }

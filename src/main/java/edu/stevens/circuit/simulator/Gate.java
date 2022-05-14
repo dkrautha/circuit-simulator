@@ -52,21 +52,6 @@ public abstract class Gate implements Logic {
     }
 
     @Override
-    public List<Signal> inspect(final List<Signal> inputs) throws InvalidLogicParametersException {
-        feed(inputs);
-        propagate();
-        return read();
-    }
-
-    @Override
-    public String inspectFromString(final String inputs)
-            throws InvalidLogicParametersException, MalformedSignalException {
-        feedFromString(inputs);
-        propagate();
-        return read().toString();
-    }
-
-    @Override
     public List<Signal> read() {
         return Arrays.asList(output.getSignal());
     }

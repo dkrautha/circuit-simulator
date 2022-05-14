@@ -50,21 +50,6 @@ public class Contact implements Logic {
     }
 
     @Override
-    public List<Signal> inspect(final List<Signal> inputs) throws InvalidLogicParametersException {
-        feed(inputs);
-        propagate();
-        return read();
-    }
-
-    @Override
-    public String inspectFromString(final String inputs)
-            throws InvalidLogicParametersException, MalformedSignalException {
-        feedFromString(inputs);
-        propagate();
-        return read().toString();
-    }
-
-    @Override
     public String toString() {
         if (in.getName().equals(out.getName())) {
             return in.toString();
