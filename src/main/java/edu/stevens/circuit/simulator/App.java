@@ -1,42 +1,24 @@
 package edu.stevens.circuit.simulator;
 
-// import javafx.application.Application;
-// import javafx.fxml.FXMLLoader;
-// import javafx.scene.Parent;
-// import javafx.scene.Scene;
-// import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Parameters;
 
-// /**
-// * JavaFX App
-// */
-// public class App extends Application {
-// private static Scene scene;
 
-// @Override
-// public void start(Stage stage) throws IOException {
-// scene = new Scene(loadFXML("primary"), 640, 480);
-// stage.setScene(scene);
-// stage.show();
-// }
+@Command(name = "circsim", mixinStandardHelpOptions = true, version = "circuit-simulator 0.1.0",
+        description = "A program for simulating circuits made from basic logic gates.")
+public class App implements Callable<Integer> {
+    @Parameters(index = "0")
+    String circuitName;
 
-// static void setRoot(String fxml) throws IOException {
-// scene.setRoot(loadFXML(fxml));
-// }
+    @Parameters(index = "1..*")
+    List<String> inputStrings;
 
-// private static Parent loadFXML(String fxml) throws IOException {
-// FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-// return fxmlLoader.load();
-// }
 
-// public static void main(String[] args) {
-// launch();
-// }
-// }
-
-public class App {
     static Circuit checkIfFeedbackCircuit(String circuitName)
             throws IOException, InvalidLogicParametersException {
         try {
@@ -47,21 +29,23 @@ public class App {
     }
 
     public static void main(String[] args) {
-        // TODO: allow the user to pass in multiple sets of input signals
-        if (args.length != 2) {
-            System.out.println(
-                    "This program takes two CLI arguments, the first specifies the circuit file to open and run, the second is a string of inputs.");
-            return;
+        System.exit(new CommandLine(new App()).execute(args));
+    }
+
+    @Override
+    public Integer call() throws Exception {
+        Circuit c = checkIfFeedbackCircuit(circuitName);
+        List<List<Signal>> signalsToTry = new ArrayList<>();
+        for (String s : inputStrings) {
+            List<Signal> signals = Signal.fromString(s);
+            signalsToTry.add(signals);
         }
 
-        String circuitName = args[0];
-        try {
-            List<Signal> signals = Signal.fromString(args[1]);
-            Circuit c = checkIfFeedbackCircuit(circuitName);
+        for (List<Signal> signals : signalsToTry) {
             List<Signal> outputs = c.inspect(signals);
-            System.out.println("Outputs: %s".formatted(outputs));
-        } catch (IOException | MalformedSignalException | InvalidLogicParametersException e) {
-            e.printStackTrace();
+            System.out.println("For input: %s\nGot output: %s".formatted(signals, outputs));
         }
+
+        return 0;
     }
 }

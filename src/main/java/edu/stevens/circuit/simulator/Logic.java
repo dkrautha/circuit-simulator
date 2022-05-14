@@ -46,13 +46,16 @@ public interface Logic {
         /**
          * Performs the combination of feeding, propagating, and reading.
          * 
-         * TODO turns out you can give default impls in interfaces, maybe add one here?
-         * 
          * @param inputs
          * @return Output wires values as a list, after logic have been performed.
          * @throws InvalidLogicParametersException
          */
-        public List<Signal> inspect(List<Signal> inputs) throws InvalidLogicParametersException;
+        public default List<Signal> inspect(List<Signal> inputs)
+                        throws InvalidLogicParametersException {
+                feed(inputs);
+                propagate();
+                return read();
+        }
 
         /**
          * Performs the same actions as inspect(), but accepts a String as input.
@@ -62,6 +65,10 @@ public interface Logic {
          * @throws InvalidLogicParametersException
          * @throws MalformedSignalException
          */
-        public String inspectFromString(String inputs)
-                        throws InvalidLogicParametersException, MalformedSignalException;
+        public default String inspectFromString(String inputs)
+                        throws InvalidLogicParametersException, MalformedSignalException {
+                feedFromString(inputs);
+                propagate();
+                return Signal.toString(read());
+        }
 }
