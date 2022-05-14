@@ -6,14 +6,14 @@ This project uses Maven as a build system. To run the project, use the exec
 plugin like so:
 
 ```shell
-mvn compile exec:java -Dexec.args="circuit_name inputs"
+mvn compile exec:java -Dexec.args="circuit_name inputs..."
 ```
 
 `-Dexec.args=""` is used to pass CLI arguments to the program. The first
 argument should be the name of a circuit in the `saved_circuits` folder (not
-including the `.txt` extension). The second and final argument after that should
-be a string containing only the characters '01xX', representing the signal to be
-passed to the circuit.
+including the `.txt` extension). The second and any subsequent arguments should
+be strings containing only the characters '01xX \t', representing the signal(s)
+to be passed to the circuit.
 
 ## Circuit File Format
 
